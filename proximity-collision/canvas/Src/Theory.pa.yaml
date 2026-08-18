@@ -1,3 +1,11 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
 Screens:
   Theory:
     Properties:
@@ -9,7 +17,6 @@ Screens:
           Properties:
             Color: =RGBA(79, 195, 247, 1)
             FontWeight: =FontWeight.Bold
-            Height: =40
             Size: =22
             Text: ="The math behind the sensor"
             Width: =700
@@ -21,7 +28,6 @@ Screens:
             BorderThickness: =0
             Color: =RGBA(220, 226, 240, 1)
             Fill: =RGBA(255, 255, 255, 0.06)
-            Height: =40
             HoverColor: =RGBA(255, 255, 255, 1)
             HoverFill: =RGBA(255, 255, 255, 0.12)
             OnSelect: =Navigate(Home, ScreenTransition.None)
@@ -42,7 +48,6 @@ Screens:
             BorderThickness: =0
             Color: =RGBA(10, 14, 24, 1)
             Fill: =RGBA(79, 195, 247, 1)
-            Height: =40
             HoverColor: =RGBA(10, 14, 24, 1)
             HoverFill: =RGBA(120, 212, 250, 1)
             OnSelect: =Navigate(Arena, ScreenTransition.None)
@@ -62,7 +67,6 @@ Screens:
           Properties:
             Color: =RGBA(205, 214, 232, 1)
             Height: =60
-            Size: =13
             Text: |-
               ="Everything below lives in App.Formulas as named formulas and user-defined functions, so any control (and the Timer game loop) can ask the same questions. The obstacle list is a live collection: blocks drift, the paddle follows your slider, and the ball evaluates the world fresh on every tick. It never stores where anything was."
             Width: =1302
@@ -113,7 +117,7 @@ Screens:
           Control: Label@2.5.1
           Properties:
             Color: =RGBA(205, 214, 232, 1)
-            Height: =320
+            Height: =316
             Size: =12
             Text: |-
               ="Clamping the ball's centre into the rectangle gives the closest point on the rectangle. The distance from the centre to that point, minus the radius, is the true gap. It is a signed, continuous number: it grades the threat colour, drives the sensor ring, and works for any heading, including diagonal approaches and corners, where a bounding-box check would either miss or false-alarm.
@@ -121,7 +125,7 @@ Screens:
               The nearest thing is simply the row with the smallest gap in the sensor table, whether it is a block, the paddle, or one of the four walls (which are just very large boxes outside the field, so the same function applies)."
             Width: =382
             X: =52
-            Y: =396
+            Y: =409
       - recThCard2:
           Control: Rectangle@2.3.0
           Properties:
@@ -168,7 +172,7 @@ Screens:
           Control: Label@2.5.1
           Properties:
             Color: =RGBA(205, 214, 232, 1)
-            Height: =320
+            Height: =331
             Size: =12
             Text: |-
               ="Growing every rectangle by the radius turns 'circle vs box' into 'point vs box', and the point moves in a straight line during a tick, so a ray/box intersection tells us exactly when (in ticks) it will make contact and on which face. Because the ray uses the velocity of the ball relative to the obstacle, a paddle you shove sideways or a block drifting toward the ball are handled the same as a wall.
@@ -176,7 +180,7 @@ Screens:
               The game loop uses this for the physics itself: if the earliest contact happens inside the current tick, the ball is advanced only to the contact point and then reflected. Fast balls never tunnel through thin things. The panel and the amber ghost show the same prediction to you, in ticks and seconds."
             Width: =382
             X: =492
-            Y: =396
+            Y: =409
       - recThCard3:
           Control: Rectangle@2.3.0
           Properties:
@@ -221,7 +225,7 @@ Screens:
           Control: Label@2.5.1
           Properties:
             Color: =RGBA(205, 214, 232, 1)
-            Height: =320
+            Height: =354
             Size: =12
             Text: |-
               ="Manual: you turn the heading in 15° steps, the world pushes back. On contact the velocity component along the face normal is reflected, so the ball bounces off blocks, walls, and the paddle you slide underneath it, Breakout style.
@@ -231,4 +235,4 @@ Screens:
               Techniques used: named formulas, user-defined functions, With, ForAll/Sequence/Index/Shuffle, AddColumns over a live collection, UpdateIf, a Timer game loop, and one SVG image for the entire scene."
             Width: =382
             X: =932
-            Y: =396
+            Y: =386

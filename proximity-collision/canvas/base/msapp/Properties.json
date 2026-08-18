@@ -108,11 +108,19 @@
   "ManualOfflineProfileId": "",
   "DefaultConnectedDataSourceMaxGetRowsCount": 500,
   "ContainsThirdPartyPcfControls": false,
-  "ParserErrorCount": 0,
+  "ParserErrorCount": 1,
   "BindingErrorCount": 0,
   "ConnectionString": "",
   "EnableInstrumentation": false,
-  "ControlCount": {},
-  "DeserializationLoadTime": 0.9583597,
-  "AnalysisLoadTime": 1.1264925
+  "ControlCount": {
+    "screen": 3,
+    "label": 37,
+    "button": 12,
+    "rectangle": 8,
+    "image": 1,
+    "slider": 6,
+    "timer": 1
+  },
+  "DeserializationLoadTime": 3.4782473,
+  "AnalysisLoadTime": 0.5946128
 }

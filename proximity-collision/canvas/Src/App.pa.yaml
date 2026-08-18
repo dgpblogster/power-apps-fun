@@ -1,12 +1,13 @@
 # ************************************************************************************************
-# Proximity & Collision - App-level named formulas and user-defined functions.
-# This is the "sensor brain": pure functions of the CURRENT world state (gPos, gDir, colObstacles).
-# Nothing here remembers where anything was a tick ago; the body re-reads the world every tick.
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
 # ************************************************************************************************
 App:
   Properties:
-    StartScreen: =Home
-    Theme: =PowerAppsTheme
     Formulas: |-
       =// ---------------------------------------------------------------- constants
       FieldW = 900;
@@ -92,3 +93,5 @@ App:
           {Col: 0, Row: 0}, {Col: 1, Row: 0}, {Col: 2, Row: 0}, {Col: 3, Row: 0},
           {Col: 0, Row: 1}, {Col: 1, Row: 1}, {Col: 2, Row: 1}, {Col: 3, Row: 1}
       );
+    StartScreen: =Home
+    Theme: =PowerAppsTheme
