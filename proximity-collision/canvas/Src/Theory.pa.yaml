@@ -22,6 +22,18 @@ Screens:
             Width: =700
             X: =32
             Y: =24
+      - lblThBrand:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Right
+            Color: =RGBA(150, 162, 186, 1)
+            Font: =Font.'Courier New'
+            Height: =28
+            Size: =14
+            Text: ="// The Workbench"
+            Width: =360
+            X: =760
+            Y: =30
       - btnThHome:
           Control: Classic/Button@2.2.0
           Properties:
