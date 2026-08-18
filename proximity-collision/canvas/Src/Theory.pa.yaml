@@ -1,0 +1,234 @@
+Screens:
+  Theory:
+    Properties:
+      Fill: =RGBA(13, 16, 27, 1)
+      LoadingSpinnerColor: =RGBA(79, 195, 247, 1)
+    Children:
+      - lblThTitle:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(79, 195, 247, 1)
+            FontWeight: =FontWeight.Bold
+            Height: =40
+            Size: =22
+            Text: ="The math behind the sensor"
+            Width: =700
+            X: =32
+            Y: =24
+      - btnThHome:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(220, 226, 240, 1)
+            Fill: =RGBA(255, 255, 255, 0.06)
+            Height: =40
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: =Navigate(Home, ScreenTransition.None)
+            PressedColor: =RGBA(220, 226, 240, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.03)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Size: =13
+            Text: ="Home"
+            Width: =90
+            X: =1134
+            Y: =24
+      - btnThArena:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(10, 14, 24, 1)
+            Fill: =RGBA(79, 195, 247, 1)
+            Height: =40
+            HoverColor: =RGBA(10, 14, 24, 1)
+            HoverFill: =RGBA(120, 212, 250, 1)
+            OnSelect: =Navigate(Arena, ScreenTransition.None)
+            PressedColor: =RGBA(10, 14, 24, 1)
+            PressedFill: =RGBA(56, 160, 210, 1)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Size: =13
+            Text: ="Arena"
+            Width: =100
+            X: =1234
+            Y: =24
+      - lblThIntro:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(205, 214, 232, 1)
+            Height: =60
+            Size: =13
+            Text: |-
+              ="Everything below lives in App.Formulas as named formulas and user-defined functions, so any control (and the Timer game loop) can ask the same questions. The obstacle list is a live collection: blocks drift, the paddle follows your slider, and the ball evaluates the world fresh on every tick. It never stores where anything was."
+            Width: =1302
+            X: =32
+            Y: =72
+      - recThCard1:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(255, 255, 255, 0.12)
+            BorderThickness: =1
+            Fill: =RGBA(18, 22, 36, 1)
+            Height: =600
+            Width: =422
+            X: =32
+            Y: =140
+      - lblThCard1Kicker:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(124, 227, 139, 1)
+            Font: =Font.'Courier New'
+            Height: =24
+            Size: =12
+            Text: ="01  SENSE  ·  closest-point gap"
+            Width: =382
+            X: =52
+            Y: =156
+      - lblThCard1Code:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(220, 226, 240, 1)
+            Font: =Font.'Courier New'
+            Height: =200
+            Size: =11
+            Text: |-
+              ="px  = clamp(cx, bx, bx + bw)
+              py  = clamp(cy, by, by + bh)
+              gap = sqrt((cx - px)² + (cy - py)²) - r
+
+              gap <= 0      contact (overlap)
+              gap <  range  proximity
+              threat = 1 - clamp(gap / range, 0, 1)
+
+              GapCircleBox(cx, cy, r, bx, by, bw, bh)"
+            Width: =382
+            X: =52
+            Y: =186
+      - lblThCard1Body:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(205, 214, 232, 1)
+            Height: =320
+            Size: =12
+            Text: |-
+              ="Clamping the ball's centre into the rectangle gives the closest point on the rectangle. The distance from the centre to that point, minus the radius, is the true gap. It is a signed, continuous number: it grades the threat colour, drives the sensor ring, and works for any heading, including diagonal approaches and corners, where a bounding-box check would either miss or false-alarm.
+
+              The nearest thing is simply the row with the smallest gap in the sensor table, whether it is a block, the paddle, or one of the four walls (which are just very large boxes outside the field, so the same function applies)."
+            Width: =382
+            X: =52
+            Y: =396
+      - recThCard2:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(255, 255, 255, 0.12)
+            BorderThickness: =1
+            Fill: =RGBA(18, 22, 36, 1)
+            Height: =600
+            Width: =422
+            X: =472
+            Y: =140
+      - lblThCard2Kicker:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(255, 200, 87, 1)
+            Font: =Font.'Courier New'
+            Height: =24
+            Size: =12
+            Text: ="02  PREDICT  ·  swept test (slab method)"
+            Width: =382
+            X: =492
+            Y: =156
+      - lblThCard2Code:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(220, 226, 240, 1)
+            Font: =Font.'Courier New'
+            Height: =200
+            Size: =11
+            Text: |-
+              ="box' = box inflated by r        (Minkowski sum)
+              rv   = v_ball - v_obstacle       (relative velocity)
+
+              per axis:  t = (edge - c) / rv
+              tEnter = max(tx_near, ty_near)
+              tExit  = min(tx_far,  ty_far)
+              hit ahead  <=>  0 <= tEnter <= tExit
+              face = axis whose slab is entered last
+
+              ImpactTime(...)   ImpactAxis(...)"
+            Width: =382
+            X: =492
+            Y: =186
+      - lblThCard2Body:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(205, 214, 232, 1)
+            Height: =320
+            Size: =12
+            Text: |-
+              ="Growing every rectangle by the radius turns 'circle vs box' into 'point vs box', and the point moves in a straight line during a tick, so a ray/box intersection tells us exactly when (in ticks) it will make contact and on which face. Because the ray uses the velocity of the ball relative to the obstacle, a paddle you shove sideways or a block drifting toward the ball are handled the same as a wall.
+
+              The game loop uses this for the physics itself: if the earliest contact happens inside the current tick, the ball is advanced only to the contact point and then reflected. Fast balls never tunnel through thin things. The panel and the amber ghost show the same prediction to you, in ticks and seconds."
+            Width: =382
+            X: =492
+            Y: =396
+      - recThCard3:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(255, 255, 255, 0.12)
+            BorderThickness: =1
+            Fill: =RGBA(18, 22, 36, 1)
+            Height: =600
+            Width: =422
+            X: =912
+            Y: =140
+      - lblThCard3Kicker:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(79, 195, 247, 1)
+            Font: =Font.'Courier New'
+            Height: =24
+            Size: =12
+            Text: ="03  REACT  ·  reflect, or steer away"
+            Width: =382
+            X: =932
+            Y: =156
+      - lblThCard3Code:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(220, 226, 240, 1)
+            Font: =Font.'Courier New'
+            Height: =200
+            Size: =11
+            Text: |-
+              ="manual pilot (Breakout physics):
+                v_n  ->  -v_n   on the hit face
+                (only if the ball was heading into it)
+
+              auto pilot (reactive avoidance):
+                n    = (c - nearestPt) / |c - nearestPt|
+                dir' = normalize(dir + k · threat · n)
+                k = 0.35, applied every tick inside range"
+            Width: =382
+            X: =932
+            Y: =186
+      - lblThCard3Body:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(205, 214, 232, 1)
+            Height: =320
+            Size: =12
+            Text: |-
+              ="Manual: you turn the heading in 15° steps, the world pushes back. On contact the velocity component along the face normal is reflected, so the ball bounces off blocks, walls, and the paddle you slide underneath it, Breakout style.
+
+              Auto: a single reactive rule, no path planning and no memory. The heading is nudged away from the closest point of whatever is nearest, harder the closer it gets. Move the blocks or the paddle and the ball simply reacts to the new situation, the way you would step around someone who just walked into your path.
+
+              Techniques used: named formulas, user-defined functions, With, ForAll/Sequence/Index/Shuffle, AddColumns over a live collection, UpdateIf, a Timer game loop, and one SVG image for the entire scene."
+            Width: =382
+            X: =932
+            Y: =396

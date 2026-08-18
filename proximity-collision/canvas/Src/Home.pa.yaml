@@ -1,0 +1,222 @@
+Screens:
+  Home:
+    Properties:
+      Fill: =RGBA(13, 16, 27, 1)
+      LoadingSpinnerColor: =RGBA(79, 195, 247, 1)
+    Children:
+      - lblHomeBrand:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Right
+            Color: =RGBA(150, 162, 186, 1)
+            Font: =Font.'Courier New'
+            Height: =28
+            Size: =14
+            Text: ="// The Workbench"
+            Width: =336
+            X: =1006
+            Y: =30
+      - lblHomeTitle:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(255, 255, 255, 1)
+            FontWeight: =FontWeight.Bold
+            Height: =64
+            Size: =40
+            Text: ="Proximity & Collision"
+            Width: =900
+            X: =64
+            Y: =88
+      - lblHomeSub:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(205, 214, 232, 1)
+            Height: =84
+            Size: =16
+            Text: |-
+              ="A body moves through a field of obstacles that can move too. It carries no map. Every tick it re-reads whatever is around it right now, measures the true gap to the nearest thing, predicts when its current heading would make contact, and reacts. That is the whole idea, revisited from the 2019 Power Apps collision experiment with today's Power Fx."
+            Width: =1000
+            X: =64
+            Y: =156
+      - recHomeCard1:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(255, 255, 255, 0.12)
+            BorderThickness: =1
+            Fill: =RGBA(18, 22, 36, 1)
+            Height: =260
+            Width: =392
+            X: =64
+            Y: =272
+      - lblHomeCard1Kicker:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(124, 227, 139, 1)
+            Font: =Font.'Courier New'
+            Height: =24
+            Size: =12
+            Text: ="01  SENSE"
+            Width: =344
+            X: =88
+            Y: =292
+      - lblHomeCard1Title:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(255, 255, 255, 1)
+            FontWeight: =FontWeight.Semibold
+            Height: =36
+            Size: =20
+            Text: ="Closest-point gap"
+            Width: =344
+            X: =88
+            Y: =318
+      - lblHomeCard1Body:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(205, 214, 232, 1)
+            Height: =160
+            Size: =13
+            Text: |-
+              ="For every obstacle, clamp the ball's centre to the box to find the closest point, then measure the Euclidean distance minus the radius. A signed number, not a yes/no: negative is overlap, small is proximity, and it grades a threat colour continuously. Works in any direction of travel and around corners."
+            Width: =344
+            X: =88
+            Y: =358
+      - recHomeCard2:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(255, 255, 255, 0.12)
+            BorderThickness: =1
+            Fill: =RGBA(18, 22, 36, 1)
+            Height: =260
+            Width: =392
+            X: =487
+            Y: =272
+      - lblHomeCard2Kicker:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(255, 200, 87, 1)
+            Font: =Font.'Courier New'
+            Height: =24
+            Size: =12
+            Text: ="02  PREDICT"
+            Width: =344
+            X: =511
+            Y: =292
+      - lblHomeCard2Title:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(255, 255, 255, 1)
+            FontWeight: =FontWeight.Semibold
+            Height: =36
+            Size: =20
+            Text: ="Swept test, time to impact"
+            Width: =344
+            X: =511
+            Y: =318
+      - lblHomeCard2Body:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(205, 214, 232, 1)
+            Height: =160
+            Size: =13
+            Text: |-
+              ="Instead of asking whether the next step lands inside a box, inflate each box by the radius and ray-cast the centre along the relative velocity (ball minus obstacle). The slab method gives the exact tick of contact and which face is hit, so fast bodies never tunnel through thin things and moving paddles are handled the same as walls."
+            Width: =344
+            X: =511
+            Y: =358
+      - recHomeCard3:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(255, 255, 255, 0.12)
+            BorderThickness: =1
+            Fill: =RGBA(18, 22, 36, 1)
+            Height: =260
+            Width: =392
+            X: =910
+            Y: =272
+      - lblHomeCard3Kicker:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(79, 195, 247, 1)
+            Font: =Font.'Courier New'
+            Height: =24
+            Size: =12
+            Text: ="03  REACT"
+            Width: =344
+            X: =934
+            Y: =292
+      - lblHomeCard3Title:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(255, 255, 255, 1)
+            FontWeight: =FontWeight.Semibold
+            Height: =36
+            Size: =20
+            Text: ="Bounce, or steer away"
+            Width: =344
+            X: =934
+            Y: =318
+      - lblHomeCard3Body:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(205, 214, 232, 1)
+            Height: =160
+            Size: =13
+            Text: |-
+              ="Manual pilot: you turn the ball, physics reflects it off whatever it meets, and you slide a paddle to block it, Breakout style. Auto pilot: the ball steers away from the nearest thing, weighted by how close it is. No path planning, no memory, just what the sensor says this tick, the way you dodge someone in a hallway."
+            Width: =344
+            X: =934
+            Y: =358
+      - btnHomeArena:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(10, 14, 24, 1)
+            Fill: =RGBA(79, 195, 247, 1)
+            Height: =52
+            HoverColor: =RGBA(10, 14, 24, 1)
+            HoverFill: =RGBA(120, 212, 250, 1)
+            OnSelect: =Navigate(Arena, ScreenTransition.None)
+            PressedColor: =RGBA(10, 14, 24, 1)
+            PressedFill: =RGBA(56, 160, 210, 1)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Size: =16
+            Text: ="Enter the arena"
+            Width: =220
+            X: =64
+            Y: =572
+      - btnHomeTheory:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(230, 235, 246, 1)
+            Fill: =RGBA(255, 255, 255, 0.08)
+            Height: =52
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.14)
+            OnSelect: =Navigate(Theory, ScreenTransition.None)
+            PressedColor: =RGBA(230, 235, 246, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.04)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Size: =16
+            Text: ="Read the math"
+            Width: =220
+            X: =300
+            Y: =572
+      - lblHomeFoot:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =48
+            Size: =12
+            Text: |-
+              ="Built with Power Fx named formulas and user-defined functions (App.Formulas), a Timer game loop, a live obstacle collection, and one SVG image for the whole scene. Source: github.com/dgpblogster/power-apps-fun"
+            Width: =1000
+            X: =64
+            Y: =660

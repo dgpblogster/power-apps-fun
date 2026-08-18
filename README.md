@@ -8,6 +8,7 @@ self-contained project with its own README, source, and build/deploy scripts.
 | Folder | What it is |
 |---|---|
 | [`parametric-motions/`](parametric-motions/) | Power Apps canvas app that animates four parametric equations — Lissajous, Rose, Spiral, and Hypotrochoid — with a small circle tracing each curve. Inspired by [The Workbench blog's "PowerApps Motion Patterns"](https://www.theworkbench.blog/2019/02/powerapps-motion-patterns-with.html). Deployed as the **ParametricMotions** solution in the Workbench Dataverse environment. |
+| [`proximity-collision/`](proximity-collision/) | Power Apps canvas app in which a ball senses proximity and collisions at runtime against drifting blocks and a Breakout-style paddle: closest-point gap, swept (time-to-impact) test with relative velocity, and reactive avoidance, all as Power Fx named formulas and user-defined functions. A modern take on [The Workbench blog's "Simple Object Proximity and Collision Detection"](https://www.theworkbench.blog/2019/02/powerapps-simple-object-proximity-and.html). Deployed as the **ProximityCollision** solution in the Workbench Dataverse environment. |
 
 ## Get the code
 

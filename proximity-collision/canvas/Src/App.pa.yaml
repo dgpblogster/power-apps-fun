@@ -1,0 +1,94 @@
+# ************************************************************************************************
+# Proximity & Collision - App-level named formulas and user-defined functions.
+# This is the "sensor brain": pure functions of the CURRENT world state (gPos, gDir, colObstacles).
+# Nothing here remembers where anything was a tick ago; the body re-reads the world every tick.
+# ************************************************************************************************
+App:
+  Properties:
+    StartScreen: =Home
+    Theme: =PowerAppsTheme
+    Formulas: |-
+      =// ---------------------------------------------------------------- constants
+      FieldW = 900;
+      FieldH = 600;
+      TickMs = 50;
+      PaddleW = 120;
+      LaneH = 60;
+
+      // ---------------------------------------------------------------- helpers
+      ClampN(v: Number, lo: Number, hi: Number): Number = Max(lo, Min(hi, v));
+      Lerp(a: Number, b: Number, k: Number): Number = a + (b - a) * k;
+      Sgn(v: Number): Number = If(v > 0, 1, v < 0, -1, 0);
+      Px(v: Number): Text = Text(v, "0.0", "en-US");
+
+      // ---------------------------------------------------------------- SENSE
+      // Signed gap between a circle (cx, cy, r) and an axis-aligned box.
+      // Closest point on the box to the centre is the centre clamped to the box;
+      // gap <= 0 means overlap. Direction-agnostic and corner-correct.
+      GapCircleBox(cx: Number, cy: Number, r: Number, bx: Number, by: Number, bw: Number, bh: Number): Number =
+          With(
+              {px: ClampN(cx, bx, bx + bw), py: ClampN(cy, by, by + bh)},
+              Sqrt((cx - px) ^ 2 + (cy - py) ^ 2) - r
+          );
+
+      // ---------------------------------------------------------------- PREDICT
+      // Slab method on one axis: when does a point at c moving at v enter / leave [lo, hi]?
+      SlabEnter(c: Number, v: Number, lo: Number, hi: Number): Number =
+          If(v = 0, If(c >= lo && c <= hi, -1000000000, 1000000000), Min((lo - c) / v, (hi - c) / v));
+      SlabExit(c: Number, v: Number, lo: Number, hi: Number): Number =
+          If(v = 0, If(c >= lo && c <= hi, 1000000000, -1000000000), Max((lo - c) / v, (hi - c) / v));
+
+      // Swept circle vs box: inflate the box by r (Minkowski sum) and ray-cast the centre
+      // along the RELATIVE velocity (vx, vy). Returns ticks until contact, or -1 if the
+      // current heading never touches the box (or the circle is already inside it).
+      ImpactTime(cx: Number, cy: Number, r: Number, vx: Number, vy: Number, bx: Number, by: Number, bw: Number, bh: Number): Number =
+          With(
+              {
+                  tEnter: Max(SlabEnter(cx, vx, bx - r, bx + bw + r), SlabEnter(cy, vy, by - r, by + bh + r)),
+                  tExit: Min(SlabExit(cx, vx, bx - r, bx + bw + r), SlabExit(cy, vy, by - r, by + bh + r))
+              },
+              If(tEnter >= 0 && tEnter <= tExit, tEnter, -1)
+          );
+
+      // Which face gets hit: the axis whose slab is entered LAST is the contact normal (1 = x, 2 = y).
+      ImpactAxis(cx: Number, cy: Number, r: Number, vx: Number, vy: Number, bx: Number, by: Number, bw: Number, bh: Number): Number =
+          If(SlabEnter(cx, vx, bx - r, bx + bw + r) >= SlabEnter(cy, vy, by - r, by + bh + r), 1, 2);
+
+      // ---------------------------------------------------------------- live state (recomputed on demand)
+      Vel = {x: gDir.x * gSpeed, y: gDir.y * gSpeed};
+      HeadingDeg = Mod(Round(Degrees(Atan2(gDir.x, gDir.y)), 0) + 360, 360);
+
+      // The sensor sweep: for every obstacle in the world RIGHT NOW, the gap and the time to impact.
+      // Relative velocity = ball velocity minus obstacle velocity, so moving blocks and the paddle
+      // are handled exactly like static ones. Blocks scale with the drift slider; the paddle does not.
+      Sensor =
+          AddColumns(
+              AddColumns(
+                  colObstacles,
+                  "RVX", Vel.x - VX * If(Kind = "block", gDrift, 1),
+                  "RVY", Vel.y - VY * If(Kind = "block", gDrift, 1)
+              ),
+              "Gap", GapCircleBox(gPos.x, gPos.y, gRadius, X, Y, W, H),
+              "T", ImpactTime(gPos.x, gPos.y, gRadius, RVX, RVY, X, Y, W, H)
+          );
+      Nearest = First(Sort(Sensor, Gap));
+      NearestPt = {x: ClampN(gPos.x, Nearest.X, Nearest.X + Nearest.W), y: ClampN(gPos.y, Nearest.Y, Nearest.Y + Nearest.H)};
+      NextHit = First(Sort(Filter(Sensor, T >= 0), T));
+      Threat = If(IsBlank(Nearest), 0, 1 - ClampN(Nearest.Gap / gSensor, 0, 1));
+      Status = If(IsBlank(Nearest), "STANDBY", Nearest.Gap <= 0.5, "CONTACT", Nearest.Gap < gSensor, "PROXIMITY", "CLEAR");
+      ThreatColor = RGBA(Round(Lerp(124, 255, Threat), 0), Round(Lerp(227, 90, Threat), 0), Round(Lerp(139, 90, Threat), 0), 1);
+      ThreatHex = "#" & Dec2Hex(Round(Lerp(124, 255, Threat), 0), 2) & Dec2Hex(Round(Lerp(227, 90, Threat), 0), 2) & Dec2Hex(Round(Lerp(139, 90, Threat), 0), 2);
+
+      // ---------------------------------------------------------------- world building blocks
+      // The four walls are just very large boxes outside the field, so the same math applies to them.
+      Walls = Table(
+          {Id: -1, Name: "Left wall", Kind: "wall", X: -1000, Y: -1000, W: 1000, H: FieldH + 2000, VX: 0, VY: 0},
+          {Id: -2, Name: "Right wall", Kind: "wall", X: FieldW, Y: -1000, W: 1000, H: FieldH + 2000, VX: 0, VY: 0},
+          {Id: -3, Name: "Ceiling", Kind: "wall", X: -1000, Y: -1000, W: FieldW + 2000, H: 1000, VX: 0, VY: 0},
+          {Id: -4, Name: "Floor", Kind: "wall", X: -1000, Y: FieldH, W: FieldW + 2000, H: 1000, VX: 0, VY: 0}
+      );
+      // Spawn cells (4 x 2 grid above the paddle lane) so random blocks never sit on the ball's start.
+      Cells = Table(
+          {Col: 0, Row: 0}, {Col: 1, Row: 0}, {Col: 2, Row: 0}, {Col: 3, Row: 0},
+          {Col: 0, Row: 1}, {Col: 1, Row: 1}, {Col: 2, Row: 1}, {Col: 3, Row: 1}
+      );

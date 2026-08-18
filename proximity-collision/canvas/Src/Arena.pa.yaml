@@ -1,0 +1,636 @@
+Screens:
+  Arena:
+    Properties:
+      Fill: =RGBA(13, 16, 27, 1)
+      LoadingSpinnerColor: =RGBA(79, 195, 247, 1)
+      OnVisible: |-
+        =// First visit: seed the tunables. Later visits keep whatever the user set.
+        If(!Coalesce(gInit, false),
+            Set(gInit, true);
+            Set(gSpeed, 7);
+            Set(gRadius, 14);
+            Set(gSensor, 90);
+            Set(gBlocks, 5);
+            Set(gDrift, 1);
+            Set(gAuto, false);
+            Set(gPlaying, true);
+            // Build the world: walls + paddle + random drifting blocks. Same code as the Shuffle button.
+            With(
+                {picked: FirstN(Shuffle(Cells), gBlocks)},
+                ClearCollect(
+                    colObstacles,
+                    Walls,
+                    {Id: 0, Name: "Paddle", Kind: "paddle", X: (FieldW - PaddleW) / 2, Y: FieldH - 30, W: PaddleW, H: 16, VX: 0, VY: 0},
+                    ForAll(
+                        Sequence(gBlocks) As s,
+                        With(
+                            {c: Index(picked, s.Value), w: RandBetween(50, 140), h: RandBetween(30, 120)},
+                            {
+                                Id: s.Value,
+                                Name: "Block " & s.Value,
+                                Kind: "block",
+                                X: c.Col * 225 + RandBetween(30, 195 - w),
+                                Y: 10 + c.Row * 270 + RandBetween(30, 230 - h),
+                                W: w,
+                                H: h,
+                                VX: (RandBetween(0, 1) * 2 - 1) * RandBetween(4, 16) / 10,
+                                VY: (RandBetween(0, 1) * 2 - 1) * RandBetween(2, 10) / 10
+                            }
+                        )
+                    )
+                )
+            );
+            Set(gPos, {x: FieldW / 2, y: FieldH / 2});
+            Set(gDir, {x: Cos(Radians(-35)), y: Sin(Radians(-35))});
+            Set(gHits, 0);
+            Set(gSaves, 0);
+            Set(gMisses, 0);
+            Set(gTick, 0);
+            Set(gLastHitTick, -100);
+            Set(gLastHit, "")
+        )
+    Children:
+      - lblArnTitle:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(79, 195, 247, 1)
+            FontWeight: =FontWeight.Bold
+            Height: =40
+            Size: =22
+            Text: ="Proximity & Collision"
+            Width: =600
+            X: =32
+            Y: =24
+      - btnArnHome:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(220, 226, 240, 1)
+            Fill: =RGBA(255, 255, 255, 0.06)
+            Height: =40
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: =Navigate(Home, ScreenTransition.None)
+            PressedColor: =RGBA(220, 226, 240, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.03)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Size: =13
+            Text: ="Home"
+            Width: =90
+            X: =1134
+            Y: =24
+      - btnArnTheory:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(220, 226, 240, 1)
+            Fill: =RGBA(255, 255, 255, 0.06)
+            Height: =40
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: =Navigate(Theory, ScreenTransition.None)
+            PressedColor: =RGBA(220, 226, 240, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.03)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Size: =13
+            Text: ="The math"
+            Width: =100
+            X: =1234
+            Y: =24
+      - recArnField:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(255, 255, 255, 0.12)
+            BorderThickness: =1
+            Fill: =RGBA(18, 22, 36, 1)
+            Height: =600
+            Width: =900
+            X: =32
+            Y: =80
+      - imgArnScene:
+          Control: Image@2.2.3
+          Properties:
+            Height: =600
+            Image: |-
+              ="data:image/svg+xml;utf8," & EncodeUrl(
+                  "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 600'>" &
+                  // paddle lane
+                  "<line x1='0' y1='" & Px(FieldH - LaneH) & "' x2='900' y2='" & Px(FieldH - LaneH) & "' stroke='#FFFFFF' stroke-opacity='0.08' stroke-dasharray='2 6'/>" &
+                  // drifting blocks (the nearest one takes the threat colour)
+                  Concat(
+                      Filter(colObstacles, Kind = "block"),
+                      "<rect x='" & Px(X) & "' y='" & Px(Y) & "' width='" & Px(W) & "' height='" & Px(H) & "' rx='4' fill='" &
+                      If(!IsBlank(Nearest) && Id = Nearest.Id, ThreatHex, "#2F3A5A") & "' fill-opacity='" &
+                      If(!IsBlank(Nearest) && Id = Nearest.Id, "0.35", "1") & "' stroke='" &
+                      If(!IsBlank(Nearest) && Id = Nearest.Id, ThreatHex, "#4A5578") & "' stroke-width='1.5'/>"
+                  ) &
+                  // paddle
+                  With(
+                      {p: LookUp(colObstacles, Kind = "paddle")},
+                      If(IsBlank(p), "",
+                          "<rect x='" & Px(p.X) & "' y='" & Px(p.Y) & "' width='" & Px(p.W) & "' height='" & Px(p.H) & "' rx='8' fill='" &
+                          If(!IsBlank(Nearest) && Nearest.Id = 0, ThreatHex, "#4FC3F7") & "'/>"
+                      )
+                  ) &
+                  // gap line: ball centre to the closest point on the nearest thing
+                  If(IsBlank(Nearest), "",
+                      "<line x1='" & Px(gPos.x) & "' y1='" & Px(gPos.y) & "' x2='" & Px(NearestPt.x) & "' y2='" & Px(NearestPt.y) & "' stroke='" & ThreatHex & "' stroke-width='1.5' stroke-dasharray='4 4'/>" &
+                      "<circle cx='" & Px(NearestPt.x) & "' cy='" & Px(NearestPt.y) & "' r='3' fill='" & ThreatHex & "'/>"
+                  ) &
+                  // predicted impact: ray along the heading to the contact position
+                  If(IsBlank(NextHit), "",
+                      "<line x1='" & Px(gPos.x) & "' y1='" & Px(gPos.y) & "' x2='" & Px(gPos.x + Vel.x * NextHit.T) & "' y2='" & Px(gPos.y + Vel.y * NextHit.T) & "' stroke='#FFC857' stroke-width='1' stroke-dasharray='2 4'/>" &
+                      "<circle cx='" & Px(gPos.x + Vel.x * NextHit.T) & "' cy='" & Px(gPos.y + Vel.y * NextHit.T) & "' r='" & Px(gRadius) & "' fill='none' stroke='#FFC857' stroke-opacity='0.7' stroke-dasharray='3 3'/>"
+                  ) &
+                  // sensor range ring
+                  "<circle cx='" & Px(gPos.x) & "' cy='" & Px(gPos.y) & "' r='" & Px(gRadius + gSensor) & "' fill='none' stroke='#4FC3F7' stroke-opacity='0.35' stroke-dasharray='6 6'/>" &
+                  // hit flash
+                  If(gTick - gLastHitTick < 6,
+                      "<circle cx='" & Px(gPos.x) & "' cy='" & Px(gPos.y) & "' r='" & Px(gRadius + 6 + (gTick - gLastHitTick) * 4) & "' fill='none' stroke='#FF5A5A' stroke-width='2' stroke-opacity='" & Px(1 - (gTick - gLastHitTick) / 6) & "'/>",
+                      ""
+                  ) &
+                  // the ball, rimmed with the threat colour, plus a heading tick
+                  "<circle cx='" & Px(gPos.x) & "' cy='" & Px(gPos.y) & "' r='" & Px(gRadius) & "' fill='#FFFFFF' stroke='" & ThreatHex & "' stroke-width='3'/>" &
+                  "<line x1='" & Px(gPos.x) & "' y1='" & Px(gPos.y) & "' x2='" & Px(gPos.x + gDir.x * (gRadius - 3)) & "' y2='" & Px(gPos.y + gDir.y * (gRadius - 3)) & "' stroke='#0D101B' stroke-width='2' stroke-linecap='round'/>" &
+                  "</svg>"
+              )
+            Width: =900
+            X: =32
+            Y: =80
+      - sldArnPaddle:
+          Control: Classic/Slider@2.1.0
+          Properties:
+            Default: =(FieldW - PaddleW) / 2
+            HandleFill: =RGBA(79, 195, 247, 1)
+            Height: =44
+            Max: =FieldW - PaddleW
+            Min: =0
+            RailFill: =RGBA(255, 255, 255, 0.15)
+            ShowValue: =false
+            ValueFill: =RGBA(255, 255, 255, 0.15)
+            Width: =900
+            X: =32
+            Y: =692
+      - lblArnPaddleHint:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =22
+            Size: =10
+            Text: ="slide to move the paddle  ·  the ball has no idea where it is until its sensor sees it"
+            Width: =900
+            X: =32
+            Y: =738
+      - recArnPanel:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(255, 255, 255, 0.12)
+            BorderThickness: =1
+            Fill: =RGBA(18, 22, 36, 1)
+            Height: =656
+            Width: =378
+            X: =956
+            Y: =80
+      - lblArnStatus:
+          Control: Label@2.5.1
+          Properties:
+            Color: =ThreatColor
+            Font: =Font.'Courier New'
+            FontWeight: =FontWeight.Bold
+            Height: =40
+            Size: =24
+            Text: =If(gTick - gLastHitTick < 8, "HIT  " & Upper(gLastHit), Status)
+            Width: =338
+            X: =976
+            Y: =96
+      - lblArnNearest:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(205, 214, 232, 1)
+            Height: =22
+            Size: =12
+            Text: |-
+              ="nearest  " & If(IsBlank(Nearest), "-", Nearest.Name & "   gap " & Text(Max(0, Nearest.Gap), "0", "en-US") & " px")
+            Width: =338
+            X: =976
+            Y: =140
+      - lblArnImpact:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(205, 214, 232, 1)
+            Height: =22
+            Size: =12
+            Text: |-
+              =If(IsBlank(NextHit), "no contact on the current heading",
+                  "contact in " & Text(NextHit.T, "0.0", "en-US") & " ticks (" & Text(NextHit.T * TickMs / 1000, "0.00", "en-US") & " s)  with " & NextHit.Name)
+            Width: =338
+            X: =976
+            Y: =162
+      - lblArnCounters:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(205, 214, 232, 1)
+            Height: =22
+            Size: =12
+            Text: ="blocks hit " & gHits & "   paddle saves " & gSaves & "   floor misses " & gMisses
+            Width: =338
+            X: =976
+            Y: =184
+      - lblArnTelemetry:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =22
+            Size: =12
+            Text: ="heading " & HeadingDeg & "°   speed " & gSpeed & " px/tick   tick " & gTick & "   pilot " & If(gAuto, "auto", "manual")
+            Width: =338
+            X: =976
+            Y: =206
+      - lblArnSpeed:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =20
+            Size: =12
+            Text: ="speed = " & gSpeed & " px/tick"
+            Width: =338
+            X: =976
+            Y: =240
+      - sldArnSpeed:
+          Control: Classic/Slider@2.1.0
+          Properties:
+            Default: =gSpeed
+            HandleFill: =RGBA(79, 195, 247, 1)
+            Height: =36
+            Max: =16
+            Min: =0
+            OnChange: =Set(gSpeed, Self.Value)
+            RailFill: =RGBA(255, 255, 255, 0.15)
+            ShowValue: =false
+            ValueFill: =RGBA(79, 195, 247, 0.7)
+            Width: =338
+            X: =976
+            Y: =260
+      - lblArnRadius:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =20
+            Size: =12
+            Text: ="ball radius = " & gRadius & " px"
+            Width: =338
+            X: =976
+            Y: =300
+      - sldArnRadius:
+          Control: Classic/Slider@2.1.0
+          Properties:
+            Default: =gRadius
+            HandleFill: =RGBA(79, 195, 247, 1)
+            Height: =36
+            Max: =30
+            Min: =6
+            OnChange: =Set(gRadius, Self.Value)
+            RailFill: =RGBA(255, 255, 255, 0.15)
+            ShowValue: =false
+            ValueFill: =RGBA(79, 195, 247, 0.7)
+            Width: =338
+            X: =976
+            Y: =320
+      - lblArnSensor:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =20
+            Size: =12
+            Text: ="sensor range = " & gSensor & " px  (proximity threshold)"
+            Width: =338
+            X: =976
+            Y: =360
+      - sldArnSensor:
+          Control: Classic/Slider@2.1.0
+          Properties:
+            Default: =gSensor
+            HandleFill: =RGBA(79, 195, 247, 1)
+            Height: =36
+            Max: =240
+            Min: =20
+            OnChange: =Set(gSensor, Self.Value)
+            RailFill: =RGBA(255, 255, 255, 0.15)
+            ShowValue: =false
+            ValueFill: =RGBA(79, 195, 247, 0.7)
+            Width: =338
+            X: =976
+            Y: =380
+      - lblArnBlocks:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =20
+            Size: =12
+            Text: ="blocks = " & gBlocks & "  (applies on Shuffle)"
+            Width: =338
+            X: =976
+            Y: =420
+      - sldArnBlocks:
+          Control: Classic/Slider@2.1.0
+          Properties:
+            Default: =gBlocks
+            HandleFill: =RGBA(79, 195, 247, 1)
+            Height: =36
+            Max: =8
+            Min: =1
+            OnChange: =Set(gBlocks, Self.Value)
+            RailFill: =RGBA(255, 255, 255, 0.15)
+            ShowValue: =false
+            ValueFill: =RGBA(79, 195, 247, 0.7)
+            Width: =338
+            X: =976
+            Y: =440
+      - lblArnDrift:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =20
+            Size: =12
+            Text: ="block drift = " & gDrift & "x  (0 = static blocks)"
+            Width: =338
+            X: =976
+            Y: =480
+      - sldArnDrift:
+          Control: Classic/Slider@2.1.0
+          Properties:
+            Default: =gDrift
+            HandleFill: =RGBA(79, 195, 247, 1)
+            Height: =36
+            Max: =4
+            Min: =0
+            OnChange: =Set(gDrift, Self.Value)
+            RailFill: =RGBA(255, 255, 255, 0.15)
+            ShowValue: =false
+            ValueFill: =RGBA(79, 195, 247, 0.7)
+            Width: =338
+            X: =976
+            Y: =500
+      - btnArnPlay:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(10, 14, 24, 1)
+            Fill: =RGBA(79, 195, 247, 1)
+            Height: =40
+            HoverColor: =RGBA(10, 14, 24, 1)
+            HoverFill: =RGBA(120, 212, 250, 1)
+            OnSelect: =Set(gPlaying, !gPlaying)
+            PressedColor: =RGBA(10, 14, 24, 1)
+            PressedFill: =RGBA(56, 160, 210, 1)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Size: =13
+            Text: =If(gPlaying, "Pause", "Resume")
+            Width: =106
+            X: =976
+            Y: =548
+      - btnArnShuffle:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(230, 235, 246, 1)
+            Fill: =RGBA(255, 255, 255, 0.08)
+            Height: =40
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.14)
+            OnSelect: |-
+              =// New world: walls + paddle + random drifting blocks; ball back to the centre; counters reset.
+              With(
+                  {picked: FirstN(Shuffle(Cells), gBlocks)},
+                  ClearCollect(
+                      colObstacles,
+                      Walls,
+                      {Id: 0, Name: "Paddle", Kind: "paddle", X: (FieldW - PaddleW) / 2, Y: FieldH - 30, W: PaddleW, H: 16, VX: 0, VY: 0},
+                      ForAll(
+                          Sequence(gBlocks) As s,
+                          With(
+                              {c: Index(picked, s.Value), w: RandBetween(50, 140), h: RandBetween(30, 120)},
+                              {
+                                  Id: s.Value,
+                                  Name: "Block " & s.Value,
+                                  Kind: "block",
+                                  X: c.Col * 225 + RandBetween(30, 195 - w),
+                                  Y: 10 + c.Row * 270 + RandBetween(30, 230 - h),
+                                  W: w,
+                                  H: h,
+                                  VX: (RandBetween(0, 1) * 2 - 1) * RandBetween(4, 16) / 10,
+                                  VY: (RandBetween(0, 1) * 2 - 1) * RandBetween(2, 10) / 10
+                              }
+                          )
+                      )
+                  )
+              );
+              Reset(sldArnPaddle);
+              Set(gPos, {x: FieldW / 2, y: FieldH / 2});
+              Set(gDir, {x: Cos(Radians(-35)), y: Sin(Radians(-35))});
+              Set(gHits, 0);
+              Set(gSaves, 0);
+              Set(gMisses, 0);
+              Set(gTick, 0);
+              Set(gLastHitTick, -100);
+              Set(gLastHit, "")
+            PressedColor: =RGBA(230, 235, 246, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.04)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Size: =13
+            Text: ="Shuffle"
+            Width: =106
+            X: =1092
+            Y: =548
+      - btnArnPilot:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =If(gAuto, RGBA(10, 14, 24, 1), RGBA(230, 235, 246, 1))
+            Fill: =If(gAuto, RGBA(124, 227, 139, 1), RGBA(255, 255, 255, 0.08))
+            Height: =40
+            HoverColor: =If(gAuto, RGBA(10, 14, 24, 1), RGBA(255, 255, 255, 1))
+            HoverFill: =If(gAuto, RGBA(160, 240, 170, 1), RGBA(255, 255, 255, 0.14))
+            OnSelect: =Set(gAuto, !gAuto)
+            PressedColor: =If(gAuto, RGBA(10, 14, 24, 1), RGBA(230, 235, 246, 1))
+            PressedFill: =If(gAuto, RGBA(90, 190, 110, 1), RGBA(255, 255, 255, 0.04))
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Size: =13
+            Text: |-
+              =If(gAuto, "Pilot: auto", "Pilot: manual")
+            Width: =106
+            X: =1208
+            Y: =548
+      - btnArnTurnL:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(230, 235, 246, 1)
+            Fill: =RGBA(255, 255, 255, 0.08)
+            Height: =40
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.14)
+            OnSelect: |-
+              =With({a: Radians(-15)}, Set(gDir, {x: gDir.x * Cos(a) - gDir.y * Sin(a), y: gDir.x * Sin(a) + gDir.y * Cos(a)}))
+            PressedColor: =RGBA(230, 235, 246, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.04)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Size: =13
+            Text: ="↶ turn 15°"
+            Width: =106
+            X: =976
+            Y: =596
+      - btnArnReverse:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(230, 235, 246, 1)
+            Fill: =RGBA(255, 255, 255, 0.08)
+            Height: =40
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.14)
+            OnSelect: |-
+              =Set(gDir, {x: -gDir.x, y: -gDir.y})
+            PressedColor: =RGBA(230, 235, 246, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.04)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Size: =13
+            Text: ="reverse"
+            Width: =106
+            X: =1092
+            Y: =596
+      - btnArnTurnR:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(230, 235, 246, 1)
+            Fill: =RGBA(255, 255, 255, 0.08)
+            Height: =40
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.14)
+            OnSelect: |-
+              =With({a: Radians(15)}, Set(gDir, {x: gDir.x * Cos(a) - gDir.y * Sin(a), y: gDir.x * Sin(a) + gDir.y * Cos(a)}))
+            PressedColor: =RGBA(230, 235, 246, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.04)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Size: =13
+            Text: ="turn 15° ↷"
+            Width: =106
+            X: =1208
+            Y: =596
+      - lblArnLegend:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =84
+            Size: =10
+            Text: |-
+              ="white ball, rim = threat colour (green far, red touching)  ·  dashed cyan ring = sensor range  ·  dashed line + dot = gap to the closest point of the nearest thing  ·  amber ray + ghost = predicted contact on the current heading (relative velocity, so moving blocks and the paddle count)  ·  red pulse = contact this tick"
+            Width: =338
+            X: =976
+            Y: =646
+      - tmrArn:
+          Control: Timer@2.1.0
+          Properties:
+            AutoStart: =true
+            Duration: =TickMs
+            Height: =24
+            OnTimerEnd: |-
+              =// ============ one tick of the world. The ball knows nothing but what Sensor says right now. ============
+              // 0. The paddle's velocity for this tick is wherever the slider is minus where the paddle is.
+              With(
+                  {pad: LookUp(colObstacles, Kind = "paddle")},
+                  If(!IsBlank(pad), Patch(colObstacles, pad, {VX: sldArnPaddle.Value - pad.X}))
+              );
+              // 1. Auto pilot: reactive avoidance. Push the heading away from the closest point of the nearest
+              //    thing, scaled by threat (0 far .. 1 touching). No planning, no memory, one rule per tick.
+              If(gAuto && !IsBlank(Nearest) && Nearest.Gap < gSensor,
+                  With(
+                      {nx: gPos.x - NearestPt.x, ny: gPos.y - NearestPt.y},
+                      With(
+                          {len: Sqrt(nx ^ 2 + ny ^ 2)},
+                          If(len > 0,
+                              With(
+                                  {sx: gDir.x + 0.35 * Threat * nx / len, sy: gDir.y + 0.35 * Threat * ny / len},
+                                  With(
+                                      {sl: Sqrt(sx ^ 2 + sy ^ 2)},
+                                      If(sl > 0, Set(gDir, {x: sx / sl, y: sy / sl}))
+                                  )
+                              )
+                          )
+                      )
+                  )
+              );
+              // 2. Sweep: earliest contact inside this tick (0 <= T < 1) across everything, walls included.
+              With(
+                  {hit: First(Sort(Filter(Sensor, T >= 0 && T < 1), T))},
+                  If(IsBlank(hit),
+                      // free flight
+                      Set(gPos, {x: gPos.x + Vel.x, y: gPos.y + Vel.y}),
+                      // contact: advance to the contact point (a hair short so we stay outside), then respond
+                      With(
+                          {
+                              t: hit.T * 0.999,
+                              ax: ImpactAxis(gPos.x, gPos.y, gRadius, hit.RVX, hit.RVY, hit.X, hit.Y, hit.W, hit.H)
+                          },
+                          Set(gPos, {x: gPos.x + Vel.x * t, y: gPos.y + Vel.y * t});
+                          // reflect the heading on the face normal, but only if the ball itself was heading into
+                          // the face (if a faster obstacle ran into us from behind, keep going, it will pass)
+                          Set(gDir,
+                              {
+                                  x: If(ax = 1 && Sgn(gDir.x) = Sgn(hit.RVX), -gDir.x, gDir.x),
+                                  y: If(ax = 2 && Sgn(gDir.y) = Sgn(hit.RVY), -gDir.y, gDir.y)
+                              }
+                          );
+                          Set(gLastHit, hit.Name);
+                          Set(gLastHitTick, gTick);
+                          Switch(hit.Kind,
+                              "block", Set(gHits, gHits + 1),
+                              "paddle", Set(gSaves, gSaves + 1),
+                              If(hit.Id = -4, Set(gMisses, gMisses + 1))
+                          )
+                      )
+                  )
+              );
+              // 3. The world moves too: blocks drift and bounce inside their lane, the paddle follows the slider.
+              UpdateIf(colObstacles, Kind = "block",
+                  {
+                      X: X + VX * gDrift,
+                      Y: Y + VY * gDrift,
+                      VX: If((X + VX * gDrift < 0 && VX < 0) || (X + VX * gDrift + W > FieldW && VX > 0), -VX, VX),
+                      VY: If((Y + VY * gDrift < 0 && VY < 0) || (Y + VY * gDrift + H > FieldH - LaneH && VY > 0), -VY, VY)
+                  }
+              );
+              UpdateIf(colObstacles, Kind = "paddle", {X: X + VX});
+              Set(gTick, gTick + 1)
+            Repeat: =true
+            Start: =gPlaying
+            Visible: =false
+            Width: =120
+            X: =1200
+            Y: =740

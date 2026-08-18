@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CanvasApp xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>wrk_proximitycollision_a4f2c</Name>
+  <AppVersion>2026-08-18T00:00:00Z</AppVersion>
+  <Status>Ready</Status>
+  <CreatedByClientVersion>3.22041.27.0</CreatedByClientVersion>
+  <MinClientVersion>3.22041.27.0</MinClientVersion>
+  <Tags>{"primaryDeviceWidth":"1366","primaryDeviceHeight":"768","supportsPortrait":"false","supportsLandscape":"true","primaryFormFactor":"Tablet","publisherVersion":"3.22041.27","minimumRequiredApiVersion":"2.2.0","hasComponent":"false","hasUnlockedComponent":"false","isUnifiedRootApp":"false"}</Tags>
+  <IsCdsUpgraded>0</IsCdsUpgraded>
+  <GalleryItemId xsi:nil="true"></GalleryItemId>
+  <BackgroundColor>rgba(13, 16, 27, 1)</BackgroundColor>
+  <DisplayName>Proximity and Collision</DisplayName>
+  <Description>A ball that senses proximity and collisions at runtime against moving obstacles and a Breakout-style paddle. Closest-point gap, swept time-to-impact with relative velocity, and reactive avoidance in App.Formulas. Modern take on The Workbench blog article on PowerApps object proximity and collision detection.</Description>
+  <CommitMessage xsi:nil="true"></CommitMessage>
+  <Publisher></Publisher>
+  <AuthorizationReferences>[]</AuthorizationReferences>
+  <ConnectionReferences>{}</ConnectionReferences>
+  <DatabaseReferences>{}</DatabaseReferences>
+  <AppComponents>[]</AppComponents>
+  <AppComponentDependencies>[]</AppComponentDependencies>
+  <CanConsumeAppPass>1</CanConsumeAppPass>
+  <CanvasAppType>0</CanvasAppType>
+  <BypassConsent>0</BypassConsent>
+  <EmbeddedApp xsi:nil="true"></EmbeddedApp>
+  <IntroducedVersion>1.0</IntroducedVersion>
+  <CdsDependencies>{"cdsdependencies":[]}</CdsDependencies>
+  <IsCustomizable>1</IsCustomizable>
+  <BackgroundImageUri>/CanvasApps/wrk_proximitycollision_a4f2c_BackgroundImageUri</BackgroundImageUri>
+  <DocumentUri>/CanvasApps/wrk_proximitycollision_a4f2c_DocumentUri.msapp</DocumentUri>
+</CanvasApp>
