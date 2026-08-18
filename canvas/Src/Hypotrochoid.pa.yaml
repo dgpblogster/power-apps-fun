@@ -1,0 +1,441 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  Hypotrochoid:
+    Properties:
+      Fill: =RGBA(13, 16, 27, 1)
+      LoadingSpinnerColor: =RGBA(124, 227, 139, 1)
+      OnVisible: |-
+        =UpdateContext({ctxHypN: 0, ctxHypPlaying: true, ctxHypMenu: false})
+    Children:
+      - btnHypMenu:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(220, 226, 240, 1)
+            Fill: =RGBA(255, 255, 255, 0.06)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: |-
+              =UpdateContext({ctxHypMenu: !ctxHypMenu})
+            PressedColor: =RGBA(220, 226, 240, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.03)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Size: =16
+            Text: ="☰"
+            Width: =48
+            X: =24
+            Y: =24
+      - lblHypTitle:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(124, 227, 139, 1)
+            FontWeight: =FontWeight.Bold
+            Size: =22
+            Text: ="Hypotrochoid"
+            Width: =500
+            X: =88
+            Y: =24
+      - recHypPlot:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(255, 255, 255, 0.12)
+            BorderThickness: =1
+            Fill: =RGBA(18, 22, 36, 1)
+            Height: =640
+            Width: =640
+            X: =40
+            Y: =88
+      - imgHypTrail:
+          Control: Image@2.2.3
+          Properties:
+            Height: =640
+            Image: |-
+              ="data:image/svg+xml;utf8," & EncodeUrl(
+                "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 640'><polyline fill='none' stroke='#7CE38B' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' points='" &
+                Concat(
+                  Sequence(ctxHypN),
+                  With(
+                    {
+                      t: 2 * Pi() * sldHypSmall.Value * Value / 600,
+                      q: (sldHypBig.Value - sldHypSmall.Value) / sldHypSmall.Value,
+                      s: 290 / (sldHypBig.Value - sldHypSmall.Value + sldHypDist.Value)
+                    },
+                    Text(320 + s * ((sldHypBig.Value - sldHypSmall.Value) * Cos(t) + sldHypDist.Value * Cos(q * t)), "0.0") & "," &
+                    Text(320 + s * ((sldHypBig.Value - sldHypSmall.Value) * Sin(t) - sldHypDist.Value * Sin(q * t)), "0.0")
+                  ),
+                  " "
+                ) &
+                "'/></svg>"
+              )
+            Width: =640
+            X: =40
+            Y: =88
+      - crcHypDot:
+          Control: Circle@2.3.0
+          Properties:
+            BorderColor: =RGBA(124, 227, 139, 1)
+            BorderThickness: =3
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =16
+            Width: =16
+            X: |-
+              =40 + 320 + With(
+                {
+                  t: 2 * Pi() * sldHypSmall.Value * ctxHypN / 600,
+                  q: (sldHypBig.Value - sldHypSmall.Value) / sldHypSmall.Value,
+                  s: 290 / (sldHypBig.Value - sldHypSmall.Value + sldHypDist.Value)
+                },
+                s * ((sldHypBig.Value - sldHypSmall.Value) * Cos(t) + sldHypDist.Value * Cos(q * t))
+              ) - Self.Width / 2
+            Y: |-
+              =88 + 320 + With(
+                {
+                  t: 2 * Pi() * sldHypSmall.Value * ctxHypN / 600,
+                  q: (sldHypBig.Value - sldHypSmall.Value) / sldHypSmall.Value,
+                  s: 290 / (sldHypBig.Value - sldHypSmall.Value + sldHypDist.Value)
+                },
+                s * ((sldHypBig.Value - sldHypSmall.Value) * Sin(t) - sldHypDist.Value * Sin(q * t))
+              ) - Self.Height / 2
+      - recHypPanel:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(255, 255, 255, 0.12)
+            BorderThickness: =1
+            Fill: =RGBA(18, 22, 36, 1)
+            Height: =640
+            Width: =606
+            X: =720
+            Y: =88
+      - lblHypEq:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(205, 214, 232, 1)
+            Height: =56
+            Size: =14
+            Text: ="x(t) = (R−r)·cos t + d·cos(((R−r)/r)·t)      y(t) = (R−r)·sin t − d·sin(((R−r)/r)·t)"
+            Width: =542
+            X: =752
+            Y: =112
+      - lblHypBig:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =22
+            Size: =12
+            Text: ="R  (fixed outer circle) = " & sldHypBig.Value
+            Width: =542
+            X: =752
+            Y: =196
+      - sldHypBig:
+          Control: Classic/Slider@2.1.0
+          Properties:
+            Default: =10
+            HandleFill: =RGBA(124, 227, 139, 1)
+            Height: =44
+            Max: =12
+            Min: =8
+            OnChange: |-
+              =UpdateContext({ctxHypN: 0})
+            RailFill: =RGBA(255, 255, 255, 0.15)
+            ShowValue: =false
+            ValueFill: =RGBA(124, 227, 139, 0.7)
+            Width: =542
+            X: =752
+            Y: =222
+      - lblHypSmall:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =22
+            Size: =12
+            Text: ="r  (rolling inner circle) = " & sldHypSmall.Value
+            Width: =542
+            X: =752
+            Y: =276
+      - sldHypSmall:
+          Control: Classic/Slider@2.1.0
+          Properties:
+            Default: =4
+            HandleFill: =RGBA(124, 227, 139, 1)
+            Height: =44
+            Max: =7
+            Min: =1
+            OnChange: |-
+              =UpdateContext({ctxHypN: 0})
+            RailFill: =RGBA(255, 255, 255, 0.15)
+            ShowValue: =false
+            ValueFill: =RGBA(124, 227, 139, 0.7)
+            Width: =542
+            X: =752
+            Y: =302
+      - lblHypDist:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =22
+            Size: =12
+            Text: ="d  (pen distance from center) = " & sldHypDist.Value
+            Width: =542
+            X: =752
+            Y: =356
+      - sldHypDist:
+          Control: Classic/Slider@2.1.0
+          Properties:
+            Default: =8
+            HandleFill: =RGBA(124, 227, 139, 1)
+            Height: =44
+            Max: =12
+            Min: =1
+            OnChange: |-
+              =UpdateContext({ctxHypN: 0})
+            RailFill: =RGBA(255, 255, 255, 0.15)
+            ShowValue: =false
+            ValueFill: =RGBA(124, 227, 139, 0.7)
+            Width: =542
+            X: =752
+            Y: =382
+      - lblHypSpeed:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =22
+            Size: =12
+            Text: ="tracer speed = " & sldHypSpeed.Value
+            Width: =542
+            X: =752
+            Y: =436
+      - sldHypSpeed:
+          Control: Classic/Slider@2.1.0
+          Properties:
+            Default: =3
+            HandleFill: =RGBA(255, 255, 255, 0.9)
+            Height: =44
+            Max: =10
+            Min: =1
+            RailFill: =RGBA(255, 255, 255, 0.15)
+            ShowValue: =false
+            ValueFill: =RGBA(255, 255, 255, 0.5)
+            Width: =542
+            X: =752
+            Y: =462
+      - lblHypProg:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =22
+            Size: =12
+            Text: ="path drawn — " & RoundDown(ctxHypN / 6, 0) & "%"
+            Width: =542
+            X: =752
+            Y: =516
+      - btnHypPlay:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(10, 14, 24, 1)
+            Fill: =RGBA(124, 227, 139, 1)
+            Height: =48
+            HoverColor: =RGBA(10, 14, 24, 1)
+            HoverFill: =RGBA(158, 238, 170, 1)
+            OnSelect: |-
+              =UpdateContext({ctxHypPlaying: !ctxHypPlaying})
+            PressedColor: =RGBA(10, 14, 24, 1)
+            PressedFill: =RGBA(98, 190, 112, 1)
+            Text: =If(ctxHypPlaying, "Pause", "Resume")
+            Width: =170
+            X: =752
+            Y: =556
+      - btnHypReset:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(230, 235, 246, 1)
+            Fill: =RGBA(255, 255, 255, 0.08)
+            Height: =48
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.14)
+            OnSelect: |-
+              =UpdateContext({ctxHypN: 0, ctxHypPlaying: true})
+            PressedColor: =RGBA(230, 235, 246, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.04)
+            Text: ="Restart"
+            Width: =170
+            X: =942
+            Y: =556
+      - tmrHyp:
+          Control: Timer@2.1.0
+          Properties:
+            AutoStart: =true
+            Duration: =80
+            Height: =24
+            OnTimerEnd: |-
+              =If(ctxHypN < 600,
+                UpdateContext({ctxHypN: Min(600, ctxHypN + sldHypSpeed.Value)})
+              )
+            Repeat: =true
+            Start: =ctxHypPlaying
+            Visible: =false
+            Width: =120
+            X: =1200
+            Y: =740
+      - lblHypBrand:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Right
+            Color: =RGBA(150, 162, 186, 1)
+            Font: =Font.'Courier New'
+            Height: =28
+            Size: =14
+            Text: ="// The Workbench"
+            Width: =336
+            X: =1006
+            Y: =30
+      - recHypScrim:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(0, 0, 0, 0.45)
+            Height: =768
+            OnSelect: |-
+              =UpdateContext({ctxHypMenu: false})
+            Visible: =ctxHypMenu
+            Width: =1366
+      - recHypMenuBg:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(24, 29, 46, 1)
+            Height: =768
+            Visible: =ctxHypMenu
+            Width: =300
+      - lblHypMnuTitle:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(255, 255, 255, 1)
+            FontWeight: =FontWeight.Bold
+            Height: =32
+            Size: =16
+            Text: ="Parametric Motions"
+            Visible: =ctxHypMenu
+            Width: =252
+            X: =24
+            Y: =28
+      - btnHypMnuHome:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderThickness: =0
+            Color: =RGBA(255, 255, 255, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =48
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: =Navigate(Screen1, ScreenTransition.None)
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.05)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Text: ="Home"
+            Visible: =ctxHypMenu
+            Width: =276
+            X: =12
+            Y: =100
+      - btnHypMnuLis:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderThickness: =0
+            Color: =RGBA(79, 195, 247, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =48
+            HoverColor: =RGBA(79, 195, 247, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: =Navigate(Lissajous, ScreenTransition.None)
+            PressedColor: =RGBA(79, 195, 247, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.05)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Text: ="Lissajous Curve"
+            Visible: =ctxHypMenu
+            Width: =276
+            X: =12
+            Y: =156
+      - btnHypMnuRos:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderThickness: =0
+            Color: =RGBA(255, 107, 157, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =48
+            HoverColor: =RGBA(255, 107, 157, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: =Navigate(Rose, ScreenTransition.None)
+            PressedColor: =RGBA(255, 107, 157, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.05)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Text: ="Rose Curve"
+            Visible: =ctxHypMenu
+            Width: =276
+            X: =12
+            Y: =212
+      - btnHypMnuSpi:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderThickness: =0
+            Color: =RGBA(255, 200, 87, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =48
+            HoverColor: =RGBA(255, 200, 87, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: =Navigate(Spiral, ScreenTransition.None)
+            PressedColor: =RGBA(255, 200, 87, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.05)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Text: ="Spiral"
+            Visible: =ctxHypMenu
+            Width: =276
+            X: =12
+            Y: =268
+      - btnHypMnuHyp:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderThickness: =0
+            Color: =RGBA(124, 227, 139, 1)
+            Fill: =RGBA(255, 255, 255, 0.08)
+            Height: =48
+            HoverColor: =RGBA(124, 227, 139, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: |-
+              =UpdateContext({ctxHypMenu: false})
+            PressedColor: =RGBA(124, 227, 139, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.05)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Text: ="Hypotrochoid"
+            Visible: =ctxHypMenu
+            Width: =276
+            X: =12
+            Y: =324

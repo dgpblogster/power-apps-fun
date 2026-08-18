@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CanvasApp xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>wrk_parametricmotions_b1e07</Name>
+  <AppVersion>2026-08-18T00:00:00Z</AppVersion>
+  <Status>Ready</Status>
+  <CreatedByClientVersion>3.22041.27.0</CreatedByClientVersion>
+  <MinClientVersion>3.22041.27.0</MinClientVersion>
+  <Tags>{"primaryDeviceWidth":"1366","primaryDeviceHeight":"768","supportsPortrait":"false","supportsLandscape":"true","primaryFormFactor":"Tablet","publisherVersion":"3.22041.27","minimumRequiredApiVersion":"2.2.0","hasComponent":"false","hasUnlockedComponent":"false","isUnifiedRootApp":"false"}</Tags>
+  <IsCdsUpgraded>0</IsCdsUpgraded>
+  <GalleryItemId xsi:nil="true"></GalleryItemId>
+  <BackgroundColor>rgba(13, 16, 27, 1)</BackgroundColor>
+  <DisplayName>Parametric Motions</DisplayName>
+  <Description>Explore four parametric equations - Lissajous, Rose, Spiral and Hypotrochoid - with an animated tracer. Based on The Workbench blog article on PowerApps motion patterns.</Description>
+  <CommitMessage xsi:nil="true"></CommitMessage>
+  <Publisher></Publisher>
+  <AuthorizationReferences>[]</AuthorizationReferences>
+  <ConnectionReferences>{}</ConnectionReferences>
+  <DatabaseReferences>{}</DatabaseReferences>
+  <AppComponents>[]</AppComponents>
+  <AppComponentDependencies>[]</AppComponentDependencies>
+  <CanConsumeAppPass>1</CanConsumeAppPass>
+  <CanvasAppType>0</CanvasAppType>
+  <BypassConsent>0</BypassConsent>
+  <EmbeddedApp xsi:nil="true"></EmbeddedApp>
+  <IntroducedVersion>1.0</IntroducedVersion>
+  <CdsDependencies>{"cdsdependencies":[]}</CdsDependencies>
+  <IsCustomizable>1</IsCustomizable>
+  <BackgroundImageUri>/CanvasApps/wrk_parametricmotions_b1e07_BackgroundImageUri</BackgroundImageUri>
+  <DocumentUri>/CanvasApps/wrk_parametricmotions_b1e07_DocumentUri.msapp</DocumentUri>
+</CanvasApp>

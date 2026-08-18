@@ -1,0 +1,395 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  Rose:
+    Properties:
+      Fill: =RGBA(13, 16, 27, 1)
+      LoadingSpinnerColor: =RGBA(255, 107, 157, 1)
+      OnVisible: |-
+        =UpdateContext({ctxRosN: 0, ctxRosPlaying: true, ctxRosMenu: false})
+    Children:
+      - btnRosMenu:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(220, 226, 240, 1)
+            Fill: =RGBA(255, 255, 255, 0.06)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: |-
+              =UpdateContext({ctxRosMenu: !ctxRosMenu})
+            PressedColor: =RGBA(220, 226, 240, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.03)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Size: =16
+            Text: ="☰"
+            Width: =48
+            X: =24
+            Y: =24
+      - lblRosTitle:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(255, 107, 157, 1)
+            FontWeight: =FontWeight.Bold
+            Size: =22
+            Text: ="Rose Curve"
+            Width: =500
+            X: =88
+            Y: =24
+      - recRosPlot:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(255, 255, 255, 0.12)
+            BorderThickness: =1
+            Fill: =RGBA(18, 22, 36, 1)
+            Height: =640
+            Width: =640
+            X: =40
+            Y: =88
+      - imgRosTrail:
+          Control: Image@2.2.3
+          Properties:
+            Height: =640
+            Image: |-
+              ="data:image/svg+xml;utf8," & EncodeUrl(
+                "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 640'><polyline fill='none' stroke='#FF6B9D' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' points='" &
+                Concat(
+                  Sequence(ctxRosN),
+                  With(
+                    {t: 2 * Pi() * Value / 600},
+                    Text(320 + sldRosSize.Value * Cos(sldRosK.Value * t) * Cos(t), "0.0") & "," &
+                    Text(320 + sldRosSize.Value * Cos(sldRosK.Value * t) * Sin(t), "0.0")
+                  ),
+                  " "
+                ) &
+                "'/></svg>"
+              )
+            Width: =640
+            X: =40
+            Y: =88
+      - crcRosDot:
+          Control: Circle@2.3.0
+          Properties:
+            BorderColor: =RGBA(255, 107, 157, 1)
+            BorderThickness: =3
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =16
+            Width: =16
+            X: =40 + 320 + sldRosSize.Value * Cos(sldRosK.Value * (2 * Pi() * ctxRosN / 600)) * Cos(2 * Pi() * ctxRosN / 600) - Self.Width / 2
+            Y: =88 + 320 + sldRosSize.Value * Cos(sldRosK.Value * (2 * Pi() * ctxRosN / 600)) * Sin(2 * Pi() * ctxRosN / 600) - Self.Height / 2
+      - recRosPanel:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(255, 255, 255, 0.12)
+            BorderThickness: =1
+            Fill: =RGBA(18, 22, 36, 1)
+            Height: =640
+            Width: =606
+            X: =720
+            Y: =88
+      - lblRosEq:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(205, 214, 232, 1)
+            Height: =56
+            Size: =14
+            Text: ="r(θ) = A·cos(k·θ)      an odd k draws k petals, an even k draws 2·k petals"
+            Width: =542
+            X: =752
+            Y: =112
+      - lblRosK:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =22
+            Size: =12
+            Text: ="k  (petal factor) = " & sldRosK.Value
+            Width: =542
+            X: =752
+            Y: =196
+      - sldRosK:
+          Control: Classic/Slider@2.1.0
+          Properties:
+            Default: =5
+            HandleFill: =RGBA(255, 107, 157, 1)
+            Height: =44
+            Max: =10
+            Min: =1
+            OnChange: |-
+              =UpdateContext({ctxRosN: 0})
+            RailFill: =RGBA(255, 255, 255, 0.15)
+            ShowValue: =false
+            ValueFill: =RGBA(255, 107, 157, 0.7)
+            Width: =542
+            X: =752
+            Y: =222
+      - lblRosSize:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =22
+            Size: =12
+            Text: ="A  (petal length in pixels) = " & sldRosSize.Value
+            Width: =542
+            X: =752
+            Y: =276
+      - sldRosSize:
+          Control: Classic/Slider@2.1.0
+          Properties:
+            Default: =290
+            HandleFill: =RGBA(255, 107, 157, 1)
+            Height: =44
+            Max: =290
+            Min: =100
+            OnChange: |-
+              =UpdateContext({ctxRosN: 0})
+            RailFill: =RGBA(255, 255, 255, 0.15)
+            ShowValue: =false
+            ValueFill: =RGBA(255, 107, 157, 0.7)
+            Width: =542
+            X: =752
+            Y: =302
+      - lblRosSpeed:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =22
+            Size: =12
+            Text: ="tracer speed = " & sldRosSpeed.Value
+            Width: =542
+            X: =752
+            Y: =436
+      - sldRosSpeed:
+          Control: Classic/Slider@2.1.0
+          Properties:
+            Default: =3
+            HandleFill: =RGBA(255, 255, 255, 0.9)
+            Height: =44
+            Max: =10
+            Min: =1
+            RailFill: =RGBA(255, 255, 255, 0.15)
+            ShowValue: =false
+            ValueFill: =RGBA(255, 255, 255, 0.5)
+            Width: =542
+            X: =752
+            Y: =462
+      - lblRosProg:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =22
+            Size: =12
+            Text: ="path drawn — " & RoundDown(ctxRosN / 6, 0) & "%"
+            Width: =542
+            X: =752
+            Y: =516
+      - btnRosPlay:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(10, 14, 24, 1)
+            Fill: =RGBA(255, 107, 157, 1)
+            Height: =48
+            HoverColor: =RGBA(10, 14, 24, 1)
+            HoverFill: =RGBA(255, 140, 178, 1)
+            OnSelect: |-
+              =UpdateContext({ctxRosPlaying: !ctxRosPlaying})
+            PressedColor: =RGBA(10, 14, 24, 1)
+            PressedFill: =RGBA(214, 84, 128, 1)
+            Text: =If(ctxRosPlaying, "Pause", "Resume")
+            Width: =170
+            X: =752
+            Y: =556
+      - btnRosReset:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(230, 235, 246, 1)
+            Fill: =RGBA(255, 255, 255, 0.08)
+            Height: =48
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.14)
+            OnSelect: |-
+              =UpdateContext({ctxRosN: 0, ctxRosPlaying: true})
+            PressedColor: =RGBA(230, 235, 246, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.04)
+            Text: ="Restart"
+            Width: =170
+            X: =942
+            Y: =556
+      - tmrRos:
+          Control: Timer@2.1.0
+          Properties:
+            AutoStart: =true
+            Duration: =80
+            Height: =24
+            OnTimerEnd: |-
+              =If(ctxRosN < 600,
+                UpdateContext({ctxRosN: Min(600, ctxRosN + sldRosSpeed.Value)})
+              )
+            Repeat: =true
+            Start: =ctxRosPlaying
+            Visible: =false
+            Width: =120
+            X: =1200
+            Y: =740
+      - lblRosBrand:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Right
+            Color: =RGBA(150, 162, 186, 1)
+            Font: =Font.'Courier New'
+            Height: =28
+            Size: =14
+            Text: ="// The Workbench"
+            Width: =336
+            X: =1006
+            Y: =30
+      - recRosScrim:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(0, 0, 0, 0.45)
+            Height: =768
+            OnSelect: |-
+              =UpdateContext({ctxRosMenu: false})
+            Visible: =ctxRosMenu
+            Width: =1366
+      - recRosMenuBg:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(24, 29, 46, 1)
+            Height: =768
+            Visible: =ctxRosMenu
+            Width: =300
+      - lblRosMnuTitle:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(255, 255, 255, 1)
+            FontWeight: =FontWeight.Bold
+            Height: =32
+            Size: =16
+            Text: ="Parametric Motions"
+            Visible: =ctxRosMenu
+            Width: =252
+            X: =24
+            Y: =28
+      - btnRosMnuHome:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderThickness: =0
+            Color: =RGBA(255, 255, 255, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =48
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: =Navigate(Screen1, ScreenTransition.None)
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.05)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Text: ="Home"
+            Visible: =ctxRosMenu
+            Width: =276
+            X: =12
+            Y: =100
+      - btnRosMnuLis:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderThickness: =0
+            Color: =RGBA(79, 195, 247, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =48
+            HoverColor: =RGBA(79, 195, 247, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: =Navigate(Lissajous, ScreenTransition.None)
+            PressedColor: =RGBA(79, 195, 247, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.05)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Text: ="Lissajous Curve"
+            Visible: =ctxRosMenu
+            Width: =276
+            X: =12
+            Y: =156
+      - btnRosMnuRos:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderThickness: =0
+            Color: =RGBA(255, 107, 157, 1)
+            Fill: =RGBA(255, 255, 255, 0.08)
+            Height: =48
+            HoverColor: =RGBA(255, 107, 157, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: |-
+              =UpdateContext({ctxRosMenu: false})
+            PressedColor: =RGBA(255, 107, 157, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.05)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Text: ="Rose Curve"
+            Visible: =ctxRosMenu
+            Width: =276
+            X: =12
+            Y: =212
+      - btnRosMnuSpi:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderThickness: =0
+            Color: =RGBA(255, 200, 87, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =48
+            HoverColor: =RGBA(255, 200, 87, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: =Navigate(Spiral, ScreenTransition.None)
+            PressedColor: =RGBA(255, 200, 87, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.05)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Text: ="Spiral"
+            Visible: =ctxRosMenu
+            Width: =276
+            X: =12
+            Y: =268
+      - btnRosMnuHyp:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderThickness: =0
+            Color: =RGBA(124, 227, 139, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =48
+            HoverColor: =RGBA(124, 227, 139, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: =Navigate(Hypotrochoid, ScreenTransition.None)
+            PressedColor: =RGBA(124, 227, 139, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.05)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Text: ="Hypotrochoid"
+            Visible: =ctxRosMenu
+            Width: =276
+            X: =12
+            Y: =324

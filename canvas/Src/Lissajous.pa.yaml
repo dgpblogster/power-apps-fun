@@ -1,0 +1,420 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  Lissajous:
+    Properties:
+      Fill: =RGBA(13, 16, 27, 1)
+      LoadingSpinnerColor: =RGBA(79, 195, 247, 1)
+      OnVisible: |-
+        =UpdateContext({ctxLisN: 0, ctxLisPlaying: true, ctxLisMenu: false})
+    Children:
+      - btnLisMenu:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(220, 226, 240, 1)
+            Fill: =RGBA(255, 255, 255, 0.06)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: |-
+              =UpdateContext({ctxLisMenu: !ctxLisMenu})
+            PressedColor: =RGBA(220, 226, 240, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.03)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Size: =16
+            Text: ="☰"
+            Width: =48
+            X: =24
+            Y: =24
+      - lblLisTitle:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(79, 195, 247, 1)
+            FontWeight: =FontWeight.Bold
+            Size: =22
+            Text: ="Lissajous Curve"
+            Width: =500
+            X: =88
+            Y: =24
+      - recLisPlot:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(255, 255, 255, 0.12)
+            BorderThickness: =1
+            Fill: =RGBA(18, 22, 36, 1)
+            Height: =640
+            Width: =640
+            X: =40
+            Y: =88
+      - imgLisTrail:
+          Control: Image@2.2.3
+          Properties:
+            Height: =640
+            Image: |-
+              ="data:image/svg+xml;utf8," & EncodeUrl(
+                "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 640'><polyline fill='none' stroke='#4FC3F7' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' points='" &
+                Concat(
+                  Sequence(ctxLisN),
+                  With(
+                    {t: 2 * Pi() * Value / 600},
+                    Text(320 + 290 * Sin(sldLisA.Value * t + Radians(sldLisDelta.Value)), "0.0") & "," &
+                    Text(320 + 290 * Sin(sldLisB.Value * t), "0.0")
+                  ),
+                  " "
+                ) &
+                "'/></svg>"
+              )
+            Width: =640
+            X: =40
+            Y: =88
+      - crcLisDot:
+          Control: Circle@2.3.0
+          Properties:
+            BorderColor: =RGBA(79, 195, 247, 1)
+            BorderThickness: =3
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =16
+            Width: =16
+            X: =40 + 320 + 290 * Sin(sldLisA.Value * (2 * Pi() * ctxLisN / 600) + Radians(sldLisDelta.Value)) - Self.Width / 2
+            Y: =88 + 320 + 290 * Sin(sldLisB.Value * (2 * Pi() * ctxLisN / 600)) - Self.Height / 2
+      - recLisPanel:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(255, 255, 255, 0.12)
+            BorderThickness: =1
+            Fill: =RGBA(18, 22, 36, 1)
+            Height: =640
+            Width: =606
+            X: =720
+            Y: =88
+      - lblLisEq:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(205, 214, 232, 1)
+            Height: =56
+            Size: =14
+            Text: ="x(t) = A·sin(a·t + δ)      y(t) = B·sin(b·t)"
+            Width: =542
+            X: =752
+            Y: =112
+      - lblLisA:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =22
+            Size: =12
+            Text: ="a  (horizontal frequency) = " & sldLisA.Value
+            Width: =542
+            X: =752
+            Y: =196
+      - sldLisA:
+          Control: Classic/Slider@2.1.0
+          Properties:
+            Default: =3
+            HandleFill: =RGBA(79, 195, 247, 1)
+            Height: =44
+            Max: =9
+            Min: =1
+            OnChange: |-
+              =UpdateContext({ctxLisN: 0})
+            RailFill: =RGBA(255, 255, 255, 0.15)
+            ShowValue: =false
+            ValueFill: =RGBA(79, 195, 247, 0.7)
+            Width: =542
+            X: =752
+            Y: =222
+      - lblLisB:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =22
+            Size: =12
+            Text: ="b  (vertical frequency) = " & sldLisB.Value
+            Width: =542
+            X: =752
+            Y: =276
+      - sldLisB:
+          Control: Classic/Slider@2.1.0
+          Properties:
+            Default: =2
+            HandleFill: =RGBA(79, 195, 247, 1)
+            Height: =44
+            Max: =9
+            Min: =1
+            OnChange: |-
+              =UpdateContext({ctxLisN: 0})
+            RailFill: =RGBA(255, 255, 255, 0.15)
+            ShowValue: =false
+            ValueFill: =RGBA(79, 195, 247, 0.7)
+            Width: =542
+            X: =752
+            Y: =302
+      - lblLisDelta:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =22
+            Size: =12
+            Text: ="δ  (phase shift in degrees) = " & sldLisDelta.Value & "°"
+            Width: =542
+            X: =752
+            Y: =356
+      - sldLisDelta:
+          Control: Classic/Slider@2.1.0
+          Properties:
+            Default: =90
+            HandleFill: =RGBA(79, 195, 247, 1)
+            Height: =44
+            Max: =180
+            OnChange: |-
+              =UpdateContext({ctxLisN: 0})
+            RailFill: =RGBA(255, 255, 255, 0.15)
+            ShowValue: =false
+            ValueFill: =RGBA(79, 195, 247, 0.7)
+            Width: =542
+            X: =752
+            Y: =382
+      - lblLisSpeed:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =22
+            Size: =12
+            Text: ="tracer speed = " & sldLisSpeed.Value
+            Width: =542
+            X: =752
+            Y: =436
+      - sldLisSpeed:
+          Control: Classic/Slider@2.1.0
+          Properties:
+            Default: =3
+            HandleFill: =RGBA(255, 255, 255, 0.9)
+            Height: =44
+            Max: =10
+            Min: =1
+            RailFill: =RGBA(255, 255, 255, 0.15)
+            ShowValue: =false
+            ValueFill: =RGBA(255, 255, 255, 0.5)
+            Width: =542
+            X: =752
+            Y: =462
+      - lblLisProg:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(150, 162, 186, 1)
+            Height: =22
+            Size: =12
+            Text: ="path drawn — " & RoundDown(ctxLisN / 6, 0) & "%"
+            Width: =542
+            X: =752
+            Y: =516
+      - btnLisPlay:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(10, 14, 24, 1)
+            Fill: =RGBA(79, 195, 247, 1)
+            Height: =48
+            HoverColor: =RGBA(10, 14, 24, 1)
+            HoverFill: =RGBA(120, 212, 250, 1)
+            OnSelect: |-
+              =UpdateContext({ctxLisPlaying: !ctxLisPlaying})
+            PressedColor: =RGBA(10, 14, 24, 1)
+            PressedFill: =RGBA(56, 160, 210, 1)
+            Text: =If(ctxLisPlaying, "Pause", "Resume")
+            Width: =170
+            X: =752
+            Y: =556
+      - btnLisReset:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(230, 235, 246, 1)
+            Fill: =RGBA(255, 255, 255, 0.08)
+            Height: =48
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.14)
+            OnSelect: |-
+              =UpdateContext({ctxLisN: 0, ctxLisPlaying: true})
+            PressedColor: =RGBA(230, 235, 246, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.04)
+            Text: ="Restart"
+            Width: =170
+            X: =942
+            Y: =556
+      - tmrLis:
+          Control: Timer@2.1.0
+          Properties:
+            AutoStart: =true
+            Duration: =80
+            Height: =24
+            OnTimerEnd: |-
+              =If(ctxLisN < 600,
+                UpdateContext({ctxLisN: Min(600, ctxLisN + sldLisSpeed.Value)})
+              )
+            Repeat: =true
+            Start: =ctxLisPlaying
+            Visible: =false
+            Width: =120
+            X: =1200
+            Y: =740
+      - lblLisBrand:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Right
+            Color: =RGBA(150, 162, 186, 1)
+            Font: =Font.'Courier New'
+            Height: =28
+            Size: =14
+            Text: ="// The Workbench"
+            Width: =336
+            X: =1006
+            Y: =30
+      - recLisScrim:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(0, 0, 0, 0.45)
+            Height: =768
+            OnSelect: |-
+              =UpdateContext({ctxLisMenu: false})
+            Visible: =ctxLisMenu
+            Width: =1366
+      - recLisMenuBg:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(24, 29, 46, 1)
+            Height: =768
+            Visible: =ctxLisMenu
+            Width: =300
+      - lblLisMnuTitle:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(255, 255, 255, 1)
+            FontWeight: =FontWeight.Bold
+            Height: =32
+            Size: =16
+            Text: ="Parametric Motions"
+            Visible: =ctxLisMenu
+            Width: =252
+            X: =24
+            Y: =28
+      - btnLisMnuHome:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderThickness: =0
+            Color: =RGBA(255, 255, 255, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =48
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: =Navigate(Screen1, ScreenTransition.None)
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.05)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Text: ="Home"
+            Visible: =ctxLisMenu
+            Width: =276
+            X: =12
+            Y: =100
+      - btnLisMnuLis:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderThickness: =0
+            Color: =RGBA(79, 195, 247, 1)
+            Fill: =RGBA(255, 255, 255, 0.08)
+            Height: =48
+            HoverColor: =RGBA(79, 195, 247, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: |-
+              =UpdateContext({ctxLisMenu: false})
+            PressedColor: =RGBA(79, 195, 247, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.05)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Text: ="Lissajous Curve"
+            Visible: =ctxLisMenu
+            Width: =276
+            X: =12
+            Y: =156
+      - btnLisMnuRos:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderThickness: =0
+            Color: =RGBA(255, 107, 157, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =48
+            HoverColor: =RGBA(255, 107, 157, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: =Navigate(Rose, ScreenTransition.None)
+            PressedColor: =RGBA(255, 107, 157, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.05)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Text: ="Rose Curve"
+            Visible: =ctxLisMenu
+            Width: =276
+            X: =12
+            Y: =212
+      - btnLisMnuSpi:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderThickness: =0
+            Color: =RGBA(255, 200, 87, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =48
+            HoverColor: =RGBA(255, 200, 87, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: =Navigate(Spiral, ScreenTransition.None)
+            PressedColor: =RGBA(255, 200, 87, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.05)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Text: ="Spiral"
+            Visible: =ctxLisMenu
+            Width: =276
+            X: =12
+            Y: =268
+      - btnLisMnuHyp:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderThickness: =0
+            Color: =RGBA(124, 227, 139, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =48
+            HoverColor: =RGBA(124, 227, 139, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: =Navigate(Hypotrochoid, ScreenTransition.None)
+            PressedColor: =RGBA(124, 227, 139, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.05)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Text: ="Hypotrochoid"
+            Visible: =ctxLisMenu
+            Width: =276
+            X: =12
+            Y: =324

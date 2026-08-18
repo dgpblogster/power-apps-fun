@@ -1,0 +1,355 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  Screen1:
+    Properties:
+      Fill: =RGBA(13, 16, 27, 1)
+      LoadingSpinnerColor: =RGBA(79, 195, 247, 1)
+      OnVisible: |-
+        =UpdateContext({ctxHomeMenu: false})
+    Children:
+      - btnHomeMenu:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(220, 226, 240, 1)
+            Fill: =RGBA(255, 255, 255, 0.06)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: |-
+              =UpdateContext({ctxHomeMenu: !ctxHomeMenu})
+            PressedColor: =RGBA(220, 226, 240, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.03)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Size: =16
+            Text: ="☰"
+            Width: =48
+            X: =24
+            Y: =24
+      - lblHomeTitle:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            Color: =RGBA(255, 255, 255, 1)
+            FontWeight: =FontWeight.Bold
+            Height: =64
+            Size: =40
+            Text: ="Parametric Motions"
+            Width: =1366
+            Y: =88
+      - lblHomeSub:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            Color: =RGBA(160, 172, 196, 1)
+            Height: =28
+            Size: =15
+            Text: ="A small circle traces four classic parametric curves. Pick one, tune its parameters, watch the pattern emerge."
+            Width: =1366
+            Y: =162
+      - btnHomeLis:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(79, 195, 247, 0.45)
+            Color: =RGBA(79, 195, 247, 1)
+            Fill: =RGBA(21, 27, 43, 1)
+            Height: =96
+            HoverColor: =RGBA(79, 195, 247, 1)
+            HoverFill: =RGBA(29, 38, 60, 1)
+            OnSelect: =Navigate(Lissajous, ScreenTransition.Fade)
+            PressedColor: =RGBA(79, 195, 247, 1)
+            PressedFill: =RGBA(16, 21, 34, 1)
+            RadiusBottomLeft: =14
+            RadiusBottomRight: =14
+            RadiusTopLeft: =14
+            RadiusTopRight: =14
+            Size: =20
+            Text: ="Lissajous Curve"
+            Width: =430
+            X: =233
+            Y: =262
+      - lblHomeLisEq:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            Color: =RGBA(140, 150, 172, 1)
+            Height: =24
+            Size: =12
+            Text: ="x = A·sin(a·t + δ)      y = B·sin(b·t)"
+            Width: =430
+            X: =233
+            Y: =360
+      - btnHomeRose:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(255, 107, 157, 0.45)
+            Color: =RGBA(255, 107, 157, 1)
+            Fill: =RGBA(21, 27, 43, 1)
+            Height: =96
+            HoverColor: =RGBA(255, 107, 157, 1)
+            HoverFill: =RGBA(29, 38, 60, 1)
+            OnSelect: =Navigate(Rose, ScreenTransition.Fade)
+            PressedColor: =RGBA(255, 107, 157, 1)
+            PressedFill: =RGBA(16, 21, 34, 1)
+            RadiusBottomLeft: =14
+            RadiusBottomRight: =14
+            RadiusTopLeft: =14
+            RadiusTopRight: =14
+            Size: =20
+            Text: ="Rose Curve"
+            Width: =430
+            X: =703
+            Y: =262
+      - lblHomeRoseEq:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            Color: =RGBA(140, 150, 172, 1)
+            Height: =24
+            Size: =12
+            Text: ="r = A·cos(k·θ)"
+            Width: =430
+            X: =703
+            Y: =360
+      - btnHomeSpi:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(255, 200, 87, 0.45)
+            Color: =RGBA(255, 200, 87, 1)
+            Fill: =RGBA(21, 27, 43, 1)
+            Height: =96
+            HoverColor: =RGBA(255, 200, 87, 1)
+            HoverFill: =RGBA(29, 38, 60, 1)
+            OnSelect: =Navigate(Spiral, ScreenTransition.Fade)
+            PressedColor: =RGBA(255, 200, 87, 1)
+            PressedFill: =RGBA(16, 21, 34, 1)
+            RadiusBottomLeft: =14
+            RadiusBottomRight: =14
+            RadiusTopLeft: =14
+            RadiusTopRight: =14
+            Size: =20
+            Text: ="Spiral"
+            Width: =430
+            X: =233
+            Y: =420
+      - lblHomeSpiEq:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            Color: =RGBA(140, 150, 172, 1)
+            Height: =24
+            Size: =12
+            Text: ="r = a·θ  (Archimedean)"
+            Width: =430
+            X: =233
+            Y: =518
+      - btnHomeHyp:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(124, 227, 139, 0.45)
+            Color: =RGBA(124, 227, 139, 1)
+            Fill: =RGBA(21, 27, 43, 1)
+            Height: =96
+            HoverColor: =RGBA(124, 227, 139, 1)
+            HoverFill: =RGBA(29, 38, 60, 1)
+            OnSelect: =Navigate(Hypotrochoid, ScreenTransition.Fade)
+            PressedColor: =RGBA(124, 227, 139, 1)
+            PressedFill: =RGBA(16, 21, 34, 1)
+            RadiusBottomLeft: =14
+            RadiusBottomRight: =14
+            RadiusTopLeft: =14
+            RadiusTopRight: =14
+            Size: =20
+            Text: ="Hypotrochoid"
+            Width: =430
+            X: =703
+            Y: =420
+      - lblHomeHypEq:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            Color: =RGBA(140, 150, 172, 1)
+            Height: =44
+            Size: =12
+            Text: |-
+              ="x = (R−r)·cos t + d·cos(((R−r)/r)·t)
+              y = (R−r)·sin t − d·sin(((R−r)/r)·t) "
+            Width: =430
+            X: =703
+            Y: =518
+      - btnHomeBlog:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(150, 162, 186, 1)
+            Fill: =RGBA(255, 255, 255, 0.04)
+            HoverColor: =RGBA(200, 210, 230, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.09)
+            OnSelect: =Launch("https://www.theworkbench.blog/2019/02/powerapps-motion-patterns-with.html")
+            PressedColor: =RGBA(150, 162, 186, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.02)
+            Size: =12
+            Text: ="Based on “PowerApps Motion Patterns” — read the article at The Workbench blog"
+            Width: =700
+            X: =333
+            Y: =622
+      - lblHomeBrand:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Right
+            Color: =RGBA(150, 162, 186, 1)
+            Font: =Font.'Courier New'
+            Height: =28
+            Size: =14
+            Text: ="// The Workbench"
+            Width: =336
+            X: =1006
+            Y: =30
+      - recHomeScrim:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(0, 0, 0, 0.45)
+            Height: =768
+            OnSelect: |-
+              =UpdateContext({ctxHomeMenu: false})
+            Visible: =ctxHomeMenu
+            Width: =1366
+      - recHomeMenuBg:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(24, 29, 46, 1)
+            Height: =768
+            Visible: =ctxHomeMenu
+            Width: =300
+      - lblHomeMnuTitle:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(255, 255, 255, 1)
+            FontWeight: =FontWeight.Bold
+            Height: =32
+            Size: =16
+            Text: ="Parametric Motions"
+            Visible: =ctxHomeMenu
+            Width: =252
+            X: =24
+            Y: =28
+      - btnHomeMnuHome:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderThickness: =0
+            Color: =RGBA(255, 255, 255, 1)
+            Fill: =RGBA(255, 255, 255, 0.08)
+            Height: =48
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.12)
+            OnSelect: |-
+              =UpdateContext({ctxHomeMenu: false})
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.05)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Text: ="Home"
+            Visible: =ctxHomeMenu
+            Width: =276
+            X: =12
+            Y: =100
+      - btnHomeMnuLis:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderThickness: =0
+            Color: =RGBA(79, 195, 247, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =48
+            HoverColor: =RGBA(79, 195, 247, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.08)
+            OnSelect: =Navigate(Lissajous, ScreenTransition.None)
+            PressedColor: =RGBA(79, 195, 247, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.04)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Text: ="Lissajous Curve"
+            Visible: =ctxHomeMenu
+            Width: =276
+            X: =12
+            Y: =156
+      - btnHomeMnuRos:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderThickness: =0
+            Color: =RGBA(255, 107, 157, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =48
+            HoverColor: =RGBA(255, 107, 157, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.08)
+            OnSelect: =Navigate(Rose, ScreenTransition.None)
+            PressedColor: =RGBA(255, 107, 157, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.04)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Text: ="Rose Curve"
+            Visible: =ctxHomeMenu
+            Width: =276
+            X: =12
+            Y: =212
+      - btnHomeMnuSpi:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderThickness: =0
+            Color: =RGBA(255, 200, 87, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =48
+            HoverColor: =RGBA(255, 200, 87, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.08)
+            OnSelect: =Navigate(Spiral, ScreenTransition.None)
+            PressedColor: =RGBA(255, 200, 87, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.04)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Text: ="Spiral"
+            Visible: =ctxHomeMenu
+            Width: =276
+            X: =12
+            Y: =268
+      - btnHomeMnuHyp:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderThickness: =0
+            Color: =RGBA(124, 227, 139, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =48
+            HoverColor: =RGBA(124, 227, 139, 1)
+            HoverFill: =RGBA(255, 255, 255, 0.08)
+            OnSelect: =Navigate(Hypotrochoid, ScreenTransition.None)
+            PressedColor: =RGBA(124, 227, 139, 1)
+            PressedFill: =RGBA(255, 255, 255, 0.04)
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Text: ="Hypotrochoid"
+            Visible: =ctxHomeMenu
+            Width: =276
+            X: =12
+            Y: =324
