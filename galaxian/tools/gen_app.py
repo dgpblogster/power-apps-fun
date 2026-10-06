@@ -258,7 +258,7 @@ for i in range(1, 33):
 for slot, kind, col, row in SLOTS:
     phase = (slot * 3) % 5
     children += control(f"alien{slot:02d}", "Image@2.2.3", 6, props(P,
-        Image=f"=If(Mod(Int(ctxTick / 5) + {phase}, 2) = 0, nfSpr{kind}A, nfSpr{kind}B)",
+        Image=f"=If(Mod(ctxFrame + {phase}, 2) = 0, nfSpr{kind}A, nfSpr{kind}B)",
         ImagePosition="=ImagePosition.Fit",
         X=f"=nfLeft + (22 + {(col - 1) * 12} + ctxConvoyX) * nfColW",
         Y=f"=nfTop + {28 + (row - 1) * 10} * nfScale",
@@ -376,10 +376,10 @@ for i, (name, text, enabled, action) in enumerate(console_keys):
 for n in range(1, 8):
     children += control(f"imgDiver{n}", "Image@2.2.3", 6, props(P,
         Image=(f'=Switch(Index(ctxDivers, {n}).Kind, '
-               f'"Commander", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprCommanderA, nfSprCommanderB), '
-               f'"Hornet", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprHornetA, nfSprHornetB), '
-               f'"Emissary", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprEmissaryA, nfSprEmissaryB), '
-               f'If(Mod(Int(ctxTick / 4), 2) = 0, nfSprDroneA, nfSprDroneB))'),
+               f'"Commander", If(ctxFrame = 0, nfSprCommanderA, nfSprCommanderB), '
+               f'"Hornet", If(ctxFrame = 0, nfSprHornetA, nfSprHornetB), '
+               f'"Emissary", If(ctxFrame = 0, nfSprEmissaryA, nfSprEmissaryB), '
+               f'If(ctxFrame = 0, nfSprDroneA, nfSprDroneB))'),
         ImagePosition="=ImagePosition.Fit",
         X=f"=nfLeft + (Index(ctxDivers, {n}).X - 4) * nfColW",
         Y=f"=nfTop + (Index(ctxDivers, {n}).Y - 4) * nfScale",

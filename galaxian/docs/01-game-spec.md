@@ -332,6 +332,15 @@ Tuning changes made after playtesting, superseding earlier sections:
 | No diagnostics | "tps" readout under the playfield | Shows whether the browser sustains 20 ticks per second |
 | Point-sample collision at the missile tip (section 9) | **Swept test** over the segment the missile covered this tick, lowest intersecting alive row wins | At 16 lines per tick the missile skipped 8-line-tall aliens, worst on the top row |
 
+**Performance finding (2026-10-05).** The first implementation ran the whole tick as one nested `With` chain
+in which each intermediate table (divers after launch, after motion, after escort sync, after kills) was referenced
+several times downstream. Measured tick rate: **0.5 ticks per second** against a 20 target, which is what made
+the ship and fire feel laggy. Rewriting the tick as **eight sequential `UpdateContext` steps**, each storing its
+table in a context variable that later steps read, restored responsiveness. Two smaller changes went in with it:
+the wing-flap image formulas read a frame counter that changes every fifth tick instead of the tick counter, and
+column bounds recompute only when the convoy string changes. Rule for future work: in a per-tick behaviour
+formula, never reference a computed table more than once without materialising it first.
+
 Deviations discovered in the build: the accessibility checker flags every sprite Image for a tab stop (they
 carry `TabIndex -1` as decorative); `Label@2.5.1` has no `AccessibleLabel`, so HUD text relies on its visible
 content. Sound (section 15) is not implemented because media files cannot be added through YAML; it needs a
