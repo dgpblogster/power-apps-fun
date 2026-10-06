@@ -1,0 +1,4 @@
+[
+  { "tool": "connect", "args": { "environment_id": "e57d0c49-8edb-e5a5-af15-8a62479e341a", "app_id": "d54c1069-9192-4e86-a6ec-db2d5f66ff2c", "environment_category": "prod", "login_hint": "marianog@maximumglobal.biz" } },
+  { "tool": "sync_canvas", "args": { "directoryPath": "<absolute path to>/galaxian/scratch/synced" } }
+]

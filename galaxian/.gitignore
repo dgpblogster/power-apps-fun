@@ -1,0 +1,5 @@
+# Build output (regenerate with .uild.ps1)
+dist/
+# Local scratch
+scratch/
+__pycache__/

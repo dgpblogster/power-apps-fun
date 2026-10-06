@@ -1,0 +1,1931 @@
+Screens:
+  Screen1:
+    Properties:
+      Fill: =RGBA(8, 8, 12, 1)
+      LoadingSpinnerColor: =RGBA(176, 160, 240, 1)
+      OnVisible: |-
+        =UpdateContext({
+          ctxMode: "Attract", ctxTick: 0, ctxModeTicks: 0, ctxStartTime: Now(),
+          ctxScore: 0, ctxHigh: 0, ctxLives: 3, ctxWave: 1, ctxLevel: 0, ctxBonus: false,
+
+          ctxShipX: 80, ctxFire: false, ctxMisActive: false, ctxMisX: 80, ctxMisY: 201,
+          ctxConvoyX: 0, ctxConvoyDir: 1, ctxAlive: nfAliveAll, ctxMinCol: 1, ctxMaxCol: 10,
+          ctxDivers: nfDiversEmpty, ctxBombs: nfBombsEmpty,
+          ctxLaunchTimer: 78, ctxConvoyTimer: 180, ctxMourn: 0, ctxDiffBase: 0, ctxDiffExtra: 0, ctxWaveTicks: 0,
+          ctxExplTicks: 0, ctxExplX: 0, ctxExplY: 0,
+          ctxPopupTicks: 0, ctxPopupX: 0, ctxPopupY: 0, ctxPopupText: "",
+          ctxPaused: false
+
+        })
+    Children:
+      - recPlayfield:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(0, 0, 0, 1)
+            X: =nfLeft
+            Y: =nfTop
+            Width: =160 * nfColW
+            Height: =240 * nfScale
+            BorderThickness: =0
+      - star01:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(64, 192, 160, 1)
+            X: =nfLeft + 22 * nfColW
+            Y: =nfTop + Mod(135 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 1, 9) <> 0
+      - star02:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(240, 144, 96, 1)
+            X: =nfLeft + 38 * nfColW
+            Y: =nfTop + Mod(4 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 2, 9) <> 0
+      - star03:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(224, 224, 224, 1)
+            X: =nfLeft + 23 * nfColW
+            Y: =nfTop + Mod(190 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 3, 9) <> 0
+      - star04:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(96, 128, 240, 1)
+            X: =nfLeft + 94 * nfColW
+            Y: =nfTop + Mod(15 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 4, 9) <> 0
+      - star05:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(64, 192, 160, 1)
+            X: =nfLeft + 139 * nfColW
+            Y: =nfTop + Mod(128 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 5, 9) <> 0
+      - star06:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(240, 144, 96, 1)
+            X: =nfLeft + 8 * nfColW
+            Y: =nfTop + Mod(70 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 6, 9) <> 0
+      - star07:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(224, 224, 224, 1)
+            X: =nfLeft + 56 * nfColW
+            Y: =nfTop + Mod(88 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 7, 9) <> 0
+      - star08:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(96, 128, 240, 1)
+            X: =nfLeft + 67 * nfColW
+            Y: =nfTop + Mod(173 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 8, 9) <> 0
+      - star09:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(64, 192, 160, 1)
+            X: =nfLeft + 50 * nfColW
+            Y: =nfTop + Mod(207 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 9, 9) <> 0
+      - star10:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(240, 144, 96, 1)
+            X: =nfLeft + 142 * nfColW
+            Y: =nfTop + Mod(189 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 10, 9) <> 0
+      - star11:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(224, 224, 224, 1)
+            X: =nfLeft + 86 * nfColW
+            Y: =nfTop + Mod(86 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 11, 9) <> 0
+      - star12:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(96, 128, 240, 1)
+            X: =nfLeft + 68 * nfColW
+            Y: =nfTop + Mod(144 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 12, 9) <> 0
+      - star13:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(64, 192, 160, 1)
+            X: =nfLeft + 76 * nfColW
+            Y: =nfTop + Mod(52 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 13, 9) <> 0
+      - star14:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(240, 144, 96, 1)
+            X: =nfLeft + 13 * nfColW
+            Y: =nfTop + Mod(236 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 14, 9) <> 0
+      - star15:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(224, 224, 224, 1)
+            X: =nfLeft + 66 * nfColW
+            Y: =nfTop + Mod(170 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 15, 9) <> 0
+      - star16:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(96, 128, 240, 1)
+            X: =nfLeft + 74 * nfColW
+            Y: =nfTop + Mod(160 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 16, 9) <> 0
+      - star17:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(64, 192, 160, 1)
+            X: =nfLeft + 60 * nfColW
+            Y: =nfTop + Mod(214 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 17, 9) <> 0
+      - star18:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(240, 144, 96, 1)
+            X: =nfLeft + 12 * nfColW
+            Y: =nfTop + Mod(204 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 18, 9) <> 0
+      - star19:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(224, 224, 224, 1)
+            X: =nfLeft + 39 * nfColW
+            Y: =nfTop + Mod(117 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 19, 9) <> 0
+      - star20:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(96, 128, 240, 1)
+            X: =nfLeft + 90 * nfColW
+            Y: =nfTop + Mod(66 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 20, 9) <> 0
+      - star21:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(64, 192, 160, 1)
+            X: =nfLeft + 98 * nfColW
+            Y: =nfTop + Mod(89 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 21, 9) <> 0
+      - star22:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(240, 144, 96, 1)
+            X: =nfLeft + 154 * nfColW
+            Y: =nfTop + Mod(55 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 22, 9) <> 0
+      - star23:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(224, 224, 224, 1)
+            X: =nfLeft + 116 * nfColW
+            Y: =nfTop + Mod(130 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 23, 9) <> 0
+      - star24:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(96, 128, 240, 1)
+            X: =nfLeft + 39 * nfColW
+            Y: =nfTop + Mod(8 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 24, 9) <> 0
+      - star25:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(64, 192, 160, 1)
+            X: =nfLeft + 58 * nfColW
+            Y: =nfTop + Mod(184 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 25, 9) <> 0
+      - star26:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(240, 144, 96, 1)
+            X: =nfLeft + 33 * nfColW
+            Y: =nfTop + Mod(54 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 26, 9) <> 0
+      - star27:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(224, 224, 224, 1)
+            X: =nfLeft + 51 * nfColW
+            Y: =nfTop + Mod(70 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 27, 9) <> 0
+      - star28:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(96, 128, 240, 1)
+            X: =nfLeft + 34 * nfColW
+            Y: =nfTop + Mod(38 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 28, 9) <> 0
+      - star29:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(64, 192, 160, 1)
+            X: =nfLeft + 158 * nfColW
+            Y: =nfTop + Mod(218 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 29, 9) <> 0
+      - star30:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(240, 144, 96, 1)
+            X: =nfLeft + 104 * nfColW
+            Y: =nfTop + Mod(177 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 30, 9) <> 0
+      - star31:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(224, 224, 224, 1)
+            X: =nfLeft + 140 * nfColW
+            Y: =nfTop + Mod(137 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 31, 9) <> 0
+      - star32:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(96, 128, 240, 1)
+            X: =nfLeft + 2 * nfColW
+            Y: =nfTop + Mod(124 + ctxTick, 240) * nfScale
+            Width: =nfColW
+            Height: =nfScale
+            BorderThickness: =0
+            Visible: =Mod(ctxTick + 32, 9) <> 0
+      - alien01:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 3, 2) = 0, nfSprCommanderA, nfSprCommanderB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 36 + ctxConvoyX) * nfColW
+            Y: =nfTop + 28 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 1, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 01"
+            TabIndex: =-1
+      - alien02:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 1, 2) = 0, nfSprCommanderA, nfSprCommanderB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 60 + ctxConvoyX) * nfColW
+            Y: =nfTop + 28 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 2, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 02"
+            TabIndex: =-1
+      - alien03:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 4, 2) = 0, nfSprCommanderA, nfSprCommanderB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 72 + ctxConvoyX) * nfColW
+            Y: =nfTop + 28 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 3, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 03"
+            TabIndex: =-1
+      - alien04:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 2, 2) = 0, nfSprHornetA, nfSprHornetB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 24 + ctxConvoyX) * nfColW
+            Y: =nfTop + 38 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 4, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 04"
+            TabIndex: =-1
+      - alien05:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 0, 2) = 0, nfSprHornetA, nfSprHornetB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 36 + ctxConvoyX) * nfColW
+            Y: =nfTop + 38 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 5, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 05"
+            TabIndex: =-1
+      - alien06:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 3, 2) = 0, nfSprHornetA, nfSprHornetB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 48 + ctxConvoyX) * nfColW
+            Y: =nfTop + 38 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 6, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 06"
+            TabIndex: =-1
+      - alien07:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 1, 2) = 0, nfSprHornetA, nfSprHornetB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 60 + ctxConvoyX) * nfColW
+            Y: =nfTop + 38 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 7, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 07"
+            TabIndex: =-1
+      - alien08:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 4, 2) = 0, nfSprHornetA, nfSprHornetB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 72 + ctxConvoyX) * nfColW
+            Y: =nfTop + 38 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 8, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 08"
+            TabIndex: =-1
+      - alien09:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 2, 2) = 0, nfSprHornetA, nfSprHornetB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 84 + ctxConvoyX) * nfColW
+            Y: =nfTop + 38 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 9, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 09"
+            TabIndex: =-1
+      - alien10:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 0, 2) = 0, nfSprEmissaryA, nfSprEmissaryB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 12 + ctxConvoyX) * nfColW
+            Y: =nfTop + 48 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 10, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 10"
+            TabIndex: =-1
+      - alien11:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 3, 2) = 0, nfSprEmissaryA, nfSprEmissaryB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 24 + ctxConvoyX) * nfColW
+            Y: =nfTop + 48 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 11, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 11"
+            TabIndex: =-1
+      - alien12:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 1, 2) = 0, nfSprEmissaryA, nfSprEmissaryB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 36 + ctxConvoyX) * nfColW
+            Y: =nfTop + 48 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 12, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 12"
+            TabIndex: =-1
+      - alien13:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 4, 2) = 0, nfSprEmissaryA, nfSprEmissaryB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 48 + ctxConvoyX) * nfColW
+            Y: =nfTop + 48 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 13, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 13"
+            TabIndex: =-1
+      - alien14:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 2, 2) = 0, nfSprEmissaryA, nfSprEmissaryB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 60 + ctxConvoyX) * nfColW
+            Y: =nfTop + 48 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 14, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 14"
+            TabIndex: =-1
+      - alien15:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 0, 2) = 0, nfSprEmissaryA, nfSprEmissaryB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 72 + ctxConvoyX) * nfColW
+            Y: =nfTop + 48 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 15, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 15"
+            TabIndex: =-1
+      - alien16:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 3, 2) = 0, nfSprEmissaryA, nfSprEmissaryB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 84 + ctxConvoyX) * nfColW
+            Y: =nfTop + 48 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 16, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 16"
+            TabIndex: =-1
+      - alien17:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 1, 2) = 0, nfSprEmissaryA, nfSprEmissaryB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 96 + ctxConvoyX) * nfColW
+            Y: =nfTop + 48 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 17, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 17"
+            TabIndex: =-1
+      - alien18:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 4, 2) = 0, nfSprDroneA, nfSprDroneB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 0 + ctxConvoyX) * nfColW
+            Y: =nfTop + 58 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 18, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 18"
+            TabIndex: =-1
+      - alien19:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 2, 2) = 0, nfSprDroneA, nfSprDroneB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 12 + ctxConvoyX) * nfColW
+            Y: =nfTop + 58 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 19, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 19"
+            TabIndex: =-1
+      - alien20:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 0, 2) = 0, nfSprDroneA, nfSprDroneB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 24 + ctxConvoyX) * nfColW
+            Y: =nfTop + 58 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 20, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 20"
+            TabIndex: =-1
+      - alien21:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 3, 2) = 0, nfSprDroneA, nfSprDroneB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 36 + ctxConvoyX) * nfColW
+            Y: =nfTop + 58 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 21, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 21"
+            TabIndex: =-1
+      - alien22:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 1, 2) = 0, nfSprDroneA, nfSprDroneB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 48 + ctxConvoyX) * nfColW
+            Y: =nfTop + 58 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 22, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 22"
+            TabIndex: =-1
+      - alien23:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 4, 2) = 0, nfSprDroneA, nfSprDroneB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 60 + ctxConvoyX) * nfColW
+            Y: =nfTop + 58 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 23, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 23"
+            TabIndex: =-1
+      - alien24:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 2, 2) = 0, nfSprDroneA, nfSprDroneB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 72 + ctxConvoyX) * nfColW
+            Y: =nfTop + 58 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 24, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 24"
+            TabIndex: =-1
+      - alien25:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 0, 2) = 0, nfSprDroneA, nfSprDroneB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 84 + ctxConvoyX) * nfColW
+            Y: =nfTop + 58 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 25, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 25"
+            TabIndex: =-1
+      - alien26:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 3, 2) = 0, nfSprDroneA, nfSprDroneB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 96 + ctxConvoyX) * nfColW
+            Y: =nfTop + 58 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 26, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 26"
+            TabIndex: =-1
+      - alien27:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 1, 2) = 0, nfSprDroneA, nfSprDroneB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 108 + ctxConvoyX) * nfColW
+            Y: =nfTop + 58 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 27, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 27"
+            TabIndex: =-1
+      - alien28:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 4, 2) = 0, nfSprDroneA, nfSprDroneB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 0 + ctxConvoyX) * nfColW
+            Y: =nfTop + 68 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 28, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 28"
+            TabIndex: =-1
+      - alien29:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 2, 2) = 0, nfSprDroneA, nfSprDroneB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 12 + ctxConvoyX) * nfColW
+            Y: =nfTop + 68 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 29, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 29"
+            TabIndex: =-1
+      - alien30:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 0, 2) = 0, nfSprDroneA, nfSprDroneB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 24 + ctxConvoyX) * nfColW
+            Y: =nfTop + 68 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 30, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 30"
+            TabIndex: =-1
+      - alien31:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 3, 2) = 0, nfSprDroneA, nfSprDroneB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 36 + ctxConvoyX) * nfColW
+            Y: =nfTop + 68 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 31, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 31"
+            TabIndex: =-1
+      - alien32:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 1, 2) = 0, nfSprDroneA, nfSprDroneB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 48 + ctxConvoyX) * nfColW
+            Y: =nfTop + 68 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 32, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 32"
+            TabIndex: =-1
+      - alien33:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 4, 2) = 0, nfSprDroneA, nfSprDroneB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 60 + ctxConvoyX) * nfColW
+            Y: =nfTop + 68 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 33, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 33"
+            TabIndex: =-1
+      - alien34:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 2, 2) = 0, nfSprDroneA, nfSprDroneB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 72 + ctxConvoyX) * nfColW
+            Y: =nfTop + 68 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 34, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 34"
+            TabIndex: =-1
+      - alien35:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 0, 2) = 0, nfSprDroneA, nfSprDroneB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 84 + ctxConvoyX) * nfColW
+            Y: =nfTop + 68 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 35, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 35"
+            TabIndex: =-1
+      - alien36:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 3, 2) = 0, nfSprDroneA, nfSprDroneB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 96 + ctxConvoyX) * nfColW
+            Y: =nfTop + 68 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 36, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 36"
+            TabIndex: =-1
+      - alien37:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(Mod(Int(ctxTick / 5) + 1, 2) = 0, nfSprDroneA, nfSprDroneB)
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (22 + 108 + ctxConvoyX) * nfColW
+            Y: =nfTop + 68 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Mid(ctxAlive, 37, 1) = "1" && ctxMode <> "Attract"
+            AccessibleLabel: ="alien 37"
+            TabIndex: =-1
+      - imgShip:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprShip
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (ctxShipX - 4) * nfColW
+            Y: =nfTop + 205 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode = "Playing" || ctxMode = "Ready" || ctxMode = "WaveClear" || ctxMode = "Attract"
+            AccessibleLabel: ="Ship"
+            TabIndex: =-1
+      - recMissile:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(240, 240, 240, 1)
+            X: =nfLeft + ctxMisX * nfColW - nfColW / 2
+            Y: =nfTop + ctxMisY * nfScale
+            Width: =nfColW
+            Height: =4 * nfScale
+            BorderThickness: =0
+            Visible: =ctxMode = "Playing"
+      - lblLevel:
+          Control: Label@2.5.1
+          Properties:
+            Text: =If(ctxLevel = 10, "B", Text(ctxLevel))
+            Color: =RGBA(80, 128, 240, 1)
+            Font: =Font.'Courier New'
+            FontWeight: =FontWeight.Bold
+            Size: =22
+            X: =nfLeft + 4 * nfColW
+            Y: =nfTop + 14 * nfScale
+            Width: =12 * nfColW
+            Height: =12 * nfScale
+            PaddingTop: =0
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            Wrap: =false
+      - lblScore:
+          Control: Label@2.5.1
+          Properties:
+            Text: =Text(ctxScore, "00")
+            Color: =RGBA(240, 224, 64, 1)
+            Font: =Font.'Courier New'
+            FontWeight: =FontWeight.Bold
+            Size: =22
+            X: =nfLeft + 24 * nfColW
+            Y: =nfTop + 14 * nfScale
+            Width: =48 * nfColW
+            Height: =12 * nfScale
+            PaddingTop: =0
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            Wrap: =false
+      - imgLife1:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprShip
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (72) * nfColW
+            Y: =nfTop + 16 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode <> "Attract" && ctxLives - 1 >= 1
+            AccessibleLabel: ="Life 1"
+            TabIndex: =-1
+      - imgLife2:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprShip
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (82) * nfColW
+            Y: =nfTop + 16 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode <> "Attract" && ctxLives - 1 >= 2
+            AccessibleLabel: ="Life 2"
+            TabIndex: =-1
+      - imgLife3:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprShip
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (92) * nfColW
+            Y: =nfTop + 16 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode <> "Attract" && ctxLives - 1 >= 3
+            AccessibleLabel: ="Life 3"
+            TabIndex: =-1
+      - imgLife4:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprShip
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (102) * nfColW
+            Y: =nfTop + 16 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode <> "Attract" && ctxLives - 1 >= 4
+            AccessibleLabel: ="Life 4"
+            TabIndex: =-1
+      - imgFlag01:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprFlag
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (150) * nfColW
+            Y: =nfTop + 16 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode <> "Attract" && Min(ctxWave, 16) >= 1
+            AccessibleLabel: ="Flag 01"
+            TabIndex: =-1
+      - imgFlag02:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprFlag
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (144) * nfColW
+            Y: =nfTop + 16 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode <> "Attract" && Min(ctxWave, 16) >= 2
+            AccessibleLabel: ="Flag 02"
+            TabIndex: =-1
+      - imgFlag03:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprFlag
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (138) * nfColW
+            Y: =nfTop + 16 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode <> "Attract" && Min(ctxWave, 16) >= 3
+            AccessibleLabel: ="Flag 03"
+            TabIndex: =-1
+      - imgFlag04:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprFlag
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (132) * nfColW
+            Y: =nfTop + 16 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode <> "Attract" && Min(ctxWave, 16) >= 4
+            AccessibleLabel: ="Flag 04"
+            TabIndex: =-1
+      - imgFlag05:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprFlag
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (126) * nfColW
+            Y: =nfTop + 16 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode <> "Attract" && Min(ctxWave, 16) >= 5
+            AccessibleLabel: ="Flag 05"
+            TabIndex: =-1
+      - imgFlag06:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprFlag
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (120) * nfColW
+            Y: =nfTop + 16 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode <> "Attract" && Min(ctxWave, 16) >= 6
+            AccessibleLabel: ="Flag 06"
+            TabIndex: =-1
+      - imgFlag07:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprFlag
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (114) * nfColW
+            Y: =nfTop + 16 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode <> "Attract" && Min(ctxWave, 16) >= 7
+            AccessibleLabel: ="Flag 07"
+            TabIndex: =-1
+      - imgFlag08:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprFlag
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (108) * nfColW
+            Y: =nfTop + 16 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode <> "Attract" && Min(ctxWave, 16) >= 8
+            AccessibleLabel: ="Flag 08"
+            TabIndex: =-1
+      - imgFlag09:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprFlag
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (102) * nfColW
+            Y: =nfTop + 16 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode <> "Attract" && Min(ctxWave, 16) >= 9
+            AccessibleLabel: ="Flag 09"
+            TabIndex: =-1
+      - imgFlag10:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprFlag
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (96) * nfColW
+            Y: =nfTop + 16 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode <> "Attract" && Min(ctxWave, 16) >= 10
+            AccessibleLabel: ="Flag 10"
+            TabIndex: =-1
+      - imgFlag11:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprFlag
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (90) * nfColW
+            Y: =nfTop + 16 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode <> "Attract" && Min(ctxWave, 16) >= 11
+            AccessibleLabel: ="Flag 11"
+            TabIndex: =-1
+      - imgFlag12:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprFlag
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (84) * nfColW
+            Y: =nfTop + 16 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode <> "Attract" && Min(ctxWave, 16) >= 12
+            AccessibleLabel: ="Flag 12"
+            TabIndex: =-1
+      - imgFlag13:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprFlag
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (78) * nfColW
+            Y: =nfTop + 16 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode <> "Attract" && Min(ctxWave, 16) >= 13
+            AccessibleLabel: ="Flag 13"
+            TabIndex: =-1
+      - imgFlag14:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprFlag
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (72) * nfColW
+            Y: =nfTop + 16 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode <> "Attract" && Min(ctxWave, 16) >= 14
+            AccessibleLabel: ="Flag 14"
+            TabIndex: =-1
+      - imgFlag15:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprFlag
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (66) * nfColW
+            Y: =nfTop + 16 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode <> "Attract" && Min(ctxWave, 16) >= 15
+            AccessibleLabel: ="Flag 15"
+            TabIndex: =-1
+      - imgFlag16:
+          Control: Image@2.2.3
+          Properties:
+            Image: =nfSprFlag
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (60) * nfColW
+            Y: =nfTop + 16 * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxMode <> "Attract" && Min(ctxWave, 16) >= 16
+            AccessibleLabel: ="Flag 16"
+            TabIndex: =-1
+      - lblHigh:
+          Control: Label@2.5.1
+          Properties:
+            Text: =Text(ctxHigh, "00")
+            Color: =RGBA(176, 176, 176, 1)
+            Font: =Font.'Courier New'
+            FontWeight: =FontWeight.Bold
+            Size: =18
+            X: =nfLeft + 4 * nfColW
+            Y: =nfTop + 218 * nfScale
+            Width: =40 * nfColW
+            Height: =12 * nfScale
+            PaddingTop: =0
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            Wrap: =false
+      - lblFooter:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="HOMAGE 2026  NOT AFFILIATED WITH ATARI OR BANDAI NAMCO"
+            Color: =RGBA(176, 176, 176, 1)
+            Font: =Font.'Courier New'
+            Size: =11
+            X: =nfLeft + 48 * nfColW
+            Y: =nfTop + 220 * nfScale
+            Width: =108 * nfColW
+            Height: =10 * nfScale
+            PaddingTop: =0
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            Wrap: =false
+            Visible: =ctxMode = "Attract" || ctxMode = "GameOver"
+      - lblTitle:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="GALAXIAN"
+            Color: =RGBA(176, 160, 240, 1)
+            Align: =Align.Center
+            Font: =Font.'Courier New'
+            FontWeight: =FontWeight.Bold
+            Size: =56
+            X: =nfLeft
+            Y: =nfTop + 112 * nfScale
+            Width: =160 * nfColW
+            Height: =26 * nfScale
+            PaddingTop: =0
+            PaddingBottom: =0
+            Wrap: =false
+            Visible: =ctxMode = "Attract"
+      - lblMessage:
+          Control: Label@2.5.1
+          Properties:
+            Text: =Switch(ctxMode, "Ready", "PLAYER ONE", "GameOver", "GAME OVER", "")
+            Color: =RGBA(176, 160, 240, 1)
+            Align: =Align.Center
+            Font: =Font.'Courier New'
+            FontWeight: =FontWeight.Bold
+            Size: =36
+            X: =nfLeft
+            Y: =nfTop + 116 * nfScale
+            Width: =160 * nfColW
+            Height: =18 * nfScale
+            PaddingTop: =0
+            PaddingBottom: =0
+            Wrap: =false
+            Visible: =ctxMode = "Ready" || ctxMode = "GameOver"
+      - lblPopup:
+          Control: Label@2.5.1
+          Properties:
+            Text: =ctxPopupText
+            Color: =RGBA(240, 224, 64, 1)
+            Align: =Align.Center
+            Font: =Font.'Courier New'
+            FontWeight: =FontWeight.Bold
+            Size: =14
+            X: =nfLeft + (ctxPopupX - 8) * nfColW
+            Y: =nfTop + ctxPopupY * nfScale
+            Width: =16 * nfColW
+            Height: =8 * nfScale
+            PaddingTop: =0
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            Wrap: =false
+            Visible: =ctxPopupTicks > 0
+      - btnFireZone:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Text: =""
+            Fill: =RGBA(0, 0, 0, 0)
+            HoverFill: =RGBA(0, 0, 0, 0)
+            PressedFill: =RGBA(255, 255, 255, 0.05)
+            BorderThickness: =0
+            FocusedBorderThickness: =0
+            X: =nfLeft
+            Y: =nfTop + 26 * nfScale
+            Width: =160 * nfColW
+            Height: =170 * nfScale
+            Visible: =ctxMode = "Playing"
+            OnSelect: |-
+              =If(ctxMode = "Playing" && !ctxMisActive, UpdateContext({ctxMisActive: true, ctxMisX: ctxShipX, ctxMisY: 192}))
+      - sldMove:
+          Control: Classic/Slider@2.1.0
+          Properties:
+            Min: =6
+            Max: =154
+            Default: =80
+            ShowValue: =false
+            HandleFill: =RGBA(240, 80, 160, 1)
+            RailFill: =RGBA(48, 48, 64, 1)
+            ValueFill: =RGBA(48, 48, 64, 1)
+            HandleActiveFill: =RGBA(240, 160, 200, 1)
+            RailHoverFill: =RGBA(64, 64, 80, 1)
+            ValueHoverFill: =RGBA(64, 64, 80, 1)
+            X: =nfLeft + 8 * nfColW
+            Y: =nfTop + 240 * nfScale + 12
+            Width: =104 * nfColW
+            Height: =40
+            AccessibleLabel: ="Move"
+      - btnFire:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Text: ="FIRE"
+            Color: =RGBA(0, 0, 0, 1)
+            Fill: =RGBA(240, 80, 160, 1)
+            HoverFill: =RGBA(250, 120, 180, 1)
+            PressedFill: =RGBA(200, 60, 130, 1)
+            HoverColor: =RGBA(0, 0, 0, 1)
+            PressedColor: =RGBA(0, 0, 0, 1)
+            Font: =Font.'Courier New'
+            FontWeight: =FontWeight.Bold
+            Size: =20
+            BorderThickness: =0
+            RadiusTopLeft: =24
+            RadiusTopRight: =24
+            RadiusBottomLeft: =24
+            RadiusBottomRight: =24
+            X: =nfLeft + 120 * nfColW
+            Y: =nfTop + 240 * nfScale + 8
+            Width: =40 * nfColW
+            Height: =48
+            OnSelect: |-
+              =If(ctxMode = "Playing" && !ctxMisActive, UpdateContext({ctxMisActive: true, ctxMisX: ctxShipX, ctxMisY: 192}))
+      - btnStart:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Text: ="START"
+            Color: =RGBA(220, 200, 120, 1)
+            Fill: =RGBA(96, 72, 32, 1)
+            HoverFill: =RGBA(120, 92, 44, 1)
+            PressedFill: =RGBA(72, 54, 24, 1)
+            HoverColor: =RGBA(255, 240, 180, 1)
+            PressedColor: =RGBA(220, 200, 120, 1)
+            DisabledFill: =RGBA(48, 40, 28, 1)
+            DisabledColor: =RGBA(120, 110, 90, 1)
+            Font: =Font.'Courier New'
+            FontWeight: =FontWeight.Bold
+            Size: =12
+            BorderThickness: =0
+            RadiusTopLeft: =4
+            RadiusTopRight: =4
+            RadiusBottomLeft: =4
+            RadiusBottomRight: =4
+            X: =nfLeft + 8 * nfColW
+            Y: =nfTop + 240 * nfScale + 64
+            Width: =26 * nfColW
+            Height: =36
+            DisplayMode: =If(ctxMode = "Attract" || ctxMode = "GameOver", DisplayMode.Edit, DisplayMode.Disabled)
+            OnSelect: |-
+              =UpdateContext({
+                ctxMode: "Ready", ctxModeTicks: 40, ctxStartTime: Now(), ctxTick: 0,
+                ctxScore: 0, ctxLives: 3, ctxWave: 1, ctxBonus: false,
+
+                ctxShipX: 80, ctxFire: false, ctxMisActive: false, ctxMisX: 80, ctxMisY: 201,
+                ctxConvoyX: 0, ctxConvoyDir: 1, ctxAlive: nfAliveAll, ctxMinCol: 1, ctxMaxCol: 10,
+                ctxDivers: nfDiversEmpty, ctxBombs: nfBombsEmpty,
+                ctxLaunchTimer: 78, ctxConvoyTimer: 180, ctxMourn: 0, ctxDiffBase: 0, ctxDiffExtra: 0, ctxWaveTicks: 0,
+                ctxExplTicks: 0, ctxExplX: 0, ctxExplY: 0,
+                ctxPopupTicks: 0, ctxPopupX: 0, ctxPopupY: 0, ctxPopupText: "",
+                ctxPaused: false
+
+              });
+              Reset(sldMove)
+      - btnSelect:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Text: ="SELECT"
+            Color: =RGBA(220, 200, 120, 1)
+            Fill: =RGBA(96, 72, 32, 1)
+            HoverFill: =RGBA(120, 92, 44, 1)
+            PressedFill: =RGBA(72, 54, 24, 1)
+            HoverColor: =RGBA(255, 240, 180, 1)
+            PressedColor: =RGBA(220, 200, 120, 1)
+            DisabledFill: =RGBA(48, 40, 28, 1)
+            DisabledColor: =RGBA(120, 110, 90, 1)
+            Font: =Font.'Courier New'
+            FontWeight: =FontWeight.Bold
+            Size: =12
+            BorderThickness: =0
+            RadiusTopLeft: =4
+            RadiusTopRight: =4
+            RadiusBottomLeft: =4
+            RadiusBottomRight: =4
+            X: =nfLeft + 38 * nfColW
+            Y: =nfTop + 240 * nfScale + 64
+            Width: =26 * nfColW
+            Height: =36
+            DisplayMode: =If(ctxMode = "Attract" || ctxMode = "GameOver", DisplayMode.Edit, DisplayMode.Disabled)
+            OnSelect: |-
+              =UpdateContext({ctxLevel: Mod(ctxLevel + 1, 11)})
+      - btnOption:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Text: ="OPTION"
+            Color: =RGBA(220, 200, 120, 1)
+            Fill: =RGBA(96, 72, 32, 1)
+            HoverFill: =RGBA(120, 92, 44, 1)
+            PressedFill: =RGBA(72, 54, 24, 1)
+            HoverColor: =RGBA(255, 240, 180, 1)
+            PressedColor: =RGBA(220, 200, 120, 1)
+            DisabledFill: =RGBA(48, 40, 28, 1)
+            DisabledColor: =RGBA(120, 110, 90, 1)
+            Font: =Font.'Courier New'
+            FontWeight: =FontWeight.Bold
+            Size: =12
+            BorderThickness: =0
+            RadiusTopLeft: =4
+            RadiusTopRight: =4
+            RadiusBottomLeft: =4
+            RadiusBottomRight: =4
+            X: =nfLeft + 68 * nfColW
+            Y: =nfTop + 240 * nfScale + 64
+            Width: =26 * nfColW
+            Height: =36
+            DisplayMode: =If(false, DisplayMode.Edit, DisplayMode.Disabled)
+            OnSelect: |-
+              =false
+      - btnPause:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Text: ="PAUSE"
+            Color: =RGBA(220, 200, 120, 1)
+            Fill: =RGBA(96, 72, 32, 1)
+            HoverFill: =RGBA(120, 92, 44, 1)
+            PressedFill: =RGBA(72, 54, 24, 1)
+            HoverColor: =RGBA(255, 240, 180, 1)
+            PressedColor: =RGBA(220, 200, 120, 1)
+            DisabledFill: =RGBA(48, 40, 28, 1)
+            DisabledColor: =RGBA(120, 110, 90, 1)
+            Font: =Font.'Courier New'
+            FontWeight: =FontWeight.Bold
+            Size: =12
+            BorderThickness: =0
+            RadiusTopLeft: =4
+            RadiusTopRight: =4
+            RadiusBottomLeft: =4
+            RadiusBottomRight: =4
+            X: =nfLeft + 98 * nfColW
+            Y: =nfTop + 240 * nfScale + 64
+            Width: =26 * nfColW
+            Height: =36
+            DisplayMode: =If(ctxMode = "Playing", DisplayMode.Edit, DisplayMode.Disabled)
+            OnSelect: |-
+              =UpdateContext({ctxPaused: !ctxPaused})
+      - btnReset:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Text: ="RESET"
+            Color: =RGBA(220, 200, 120, 1)
+            Fill: =RGBA(96, 72, 32, 1)
+            HoverFill: =RGBA(120, 92, 44, 1)
+            PressedFill: =RGBA(72, 54, 24, 1)
+            HoverColor: =RGBA(255, 240, 180, 1)
+            PressedColor: =RGBA(220, 200, 120, 1)
+            DisabledFill: =RGBA(48, 40, 28, 1)
+            DisabledColor: =RGBA(120, 110, 90, 1)
+            Font: =Font.'Courier New'
+            FontWeight: =FontWeight.Bold
+            Size: =12
+            BorderThickness: =0
+            RadiusTopLeft: =4
+            RadiusTopRight: =4
+            RadiusBottomLeft: =4
+            RadiusBottomRight: =4
+            X: =nfLeft + 128 * nfColW
+            Y: =nfTop + 240 * nfScale + 64
+            Width: =26 * nfColW
+            Height: =36
+            DisplayMode: =If(true, DisplayMode.Edit, DisplayMode.Disabled)
+            OnSelect: |-
+              =UpdateContext({ctxMode: "Attract", ctxModeTicks: 0, ctxLevel: 0, ctxPaused: false, ctxAlive: nfAliveAll, ctxMinCol: 1, ctxMaxCol: 10, ctxConvoyX: 0})
+      - imgDiver1:
+          Control: Image@2.2.3
+          Properties:
+            Image: =Switch(Index(ctxDivers, 1).Kind, "Commander", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprCommanderA, nfSprCommanderB), "Hornet", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprHornetA, nfSprHornetB), "Emissary", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprEmissaryA, nfSprEmissaryB), If(Mod(Int(ctxTick / 4), 2) = 0, nfSprDroneA, nfSprDroneB))
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (Index(ctxDivers, 1).X - 4) * nfColW
+            Y: =nfTop + (Index(ctxDivers, 1).Y - 4) * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Index(ctxDivers, 1).Active && ctxMode = "Playing"
+            AccessibleLabel: ="Diver 1"
+            TabIndex: =-1
+      - imgDiver2:
+          Control: Image@2.2.3
+          Properties:
+            Image: =Switch(Index(ctxDivers, 2).Kind, "Commander", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprCommanderA, nfSprCommanderB), "Hornet", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprHornetA, nfSprHornetB), "Emissary", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprEmissaryA, nfSprEmissaryB), If(Mod(Int(ctxTick / 4), 2) = 0, nfSprDroneA, nfSprDroneB))
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (Index(ctxDivers, 2).X - 4) * nfColW
+            Y: =nfTop + (Index(ctxDivers, 2).Y - 4) * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Index(ctxDivers, 2).Active && ctxMode = "Playing"
+            AccessibleLabel: ="Diver 2"
+            TabIndex: =-1
+      - imgDiver3:
+          Control: Image@2.2.3
+          Properties:
+            Image: =Switch(Index(ctxDivers, 3).Kind, "Commander", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprCommanderA, nfSprCommanderB), "Hornet", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprHornetA, nfSprHornetB), "Emissary", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprEmissaryA, nfSprEmissaryB), If(Mod(Int(ctxTick / 4), 2) = 0, nfSprDroneA, nfSprDroneB))
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (Index(ctxDivers, 3).X - 4) * nfColW
+            Y: =nfTop + (Index(ctxDivers, 3).Y - 4) * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Index(ctxDivers, 3).Active && ctxMode = "Playing"
+            AccessibleLabel: ="Diver 3"
+            TabIndex: =-1
+      - imgDiver4:
+          Control: Image@2.2.3
+          Properties:
+            Image: =Switch(Index(ctxDivers, 4).Kind, "Commander", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprCommanderA, nfSprCommanderB), "Hornet", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprHornetA, nfSprHornetB), "Emissary", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprEmissaryA, nfSprEmissaryB), If(Mod(Int(ctxTick / 4), 2) = 0, nfSprDroneA, nfSprDroneB))
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (Index(ctxDivers, 4).X - 4) * nfColW
+            Y: =nfTop + (Index(ctxDivers, 4).Y - 4) * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Index(ctxDivers, 4).Active && ctxMode = "Playing"
+            AccessibleLabel: ="Diver 4"
+            TabIndex: =-1
+      - imgDiver5:
+          Control: Image@2.2.3
+          Properties:
+            Image: =Switch(Index(ctxDivers, 5).Kind, "Commander", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprCommanderA, nfSprCommanderB), "Hornet", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprHornetA, nfSprHornetB), "Emissary", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprEmissaryA, nfSprEmissaryB), If(Mod(Int(ctxTick / 4), 2) = 0, nfSprDroneA, nfSprDroneB))
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (Index(ctxDivers, 5).X - 4) * nfColW
+            Y: =nfTop + (Index(ctxDivers, 5).Y - 4) * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Index(ctxDivers, 5).Active && ctxMode = "Playing"
+            AccessibleLabel: ="Diver 5"
+            TabIndex: =-1
+      - imgDiver6:
+          Control: Image@2.2.3
+          Properties:
+            Image: =Switch(Index(ctxDivers, 6).Kind, "Commander", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprCommanderA, nfSprCommanderB), "Hornet", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprHornetA, nfSprHornetB), "Emissary", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprEmissaryA, nfSprEmissaryB), If(Mod(Int(ctxTick / 4), 2) = 0, nfSprDroneA, nfSprDroneB))
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (Index(ctxDivers, 6).X - 4) * nfColW
+            Y: =nfTop + (Index(ctxDivers, 6).Y - 4) * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Index(ctxDivers, 6).Active && ctxMode = "Playing"
+            AccessibleLabel: ="Diver 6"
+            TabIndex: =-1
+      - imgDiver7:
+          Control: Image@2.2.3
+          Properties:
+            Image: =Switch(Index(ctxDivers, 7).Kind, "Commander", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprCommanderA, nfSprCommanderB), "Hornet", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprHornetA, nfSprHornetB), "Emissary", If(Mod(Int(ctxTick / 4), 2) = 0, nfSprEmissaryA, nfSprEmissaryB), If(Mod(Int(ctxTick / 4), 2) = 0, nfSprDroneA, nfSprDroneB))
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (Index(ctxDivers, 7).X - 4) * nfColW
+            Y: =nfTop + (Index(ctxDivers, 7).Y - 4) * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =Index(ctxDivers, 7).Active && ctxMode = "Playing"
+            AccessibleLabel: ="Diver 7"
+            TabIndex: =-1
+      - recBomb1:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(240, 240, 240, 1)
+            X: =nfLeft + Index(ctxBombs, 1).X * nfColW - nfColW / 2
+            Y: =nfTop + Index(ctxBombs, 1).Y * nfScale
+            Width: =nfColW
+            Height: =4 * nfScale
+            BorderThickness: =0
+            Visible: =Index(ctxBombs, 1).Active && ctxMode = "Playing"
+      - recBomb2:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(240, 240, 240, 1)
+            X: =nfLeft + Index(ctxBombs, 2).X * nfColW - nfColW / 2
+            Y: =nfTop + Index(ctxBombs, 2).Y * nfScale
+            Width: =nfColW
+            Height: =4 * nfScale
+            BorderThickness: =0
+            Visible: =Index(ctxBombs, 2).Active && ctxMode = "Playing"
+      - recBomb3:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(240, 240, 240, 1)
+            X: =nfLeft + Index(ctxBombs, 3).X * nfColW - nfColW / 2
+            Y: =nfTop + Index(ctxBombs, 3).Y * nfScale
+            Width: =nfColW
+            Height: =4 * nfScale
+            BorderThickness: =0
+            Visible: =Index(ctxBombs, 3).Active && ctxMode = "Playing"
+      - recBomb4:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(240, 240, 240, 1)
+            X: =nfLeft + Index(ctxBombs, 4).X * nfColW - nfColW / 2
+            Y: =nfTop + Index(ctxBombs, 4).Y * nfScale
+            Width: =nfColW
+            Height: =4 * nfScale
+            BorderThickness: =0
+            Visible: =Index(ctxBombs, 4).Active && ctxMode = "Playing"
+      - recBomb5:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(240, 240, 240, 1)
+            X: =nfLeft + Index(ctxBombs, 5).X * nfColW - nfColW / 2
+            Y: =nfTop + Index(ctxBombs, 5).Y * nfScale
+            Width: =nfColW
+            Height: =4 * nfScale
+            BorderThickness: =0
+            Visible: =Index(ctxBombs, 5).Active && ctxMode = "Playing"
+      - recBomb6:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(240, 240, 240, 1)
+            X: =nfLeft + Index(ctxBombs, 6).X * nfColW - nfColW / 2
+            Y: =nfTop + Index(ctxBombs, 6).Y * nfScale
+            Width: =nfColW
+            Height: =4 * nfScale
+            BorderThickness: =0
+            Visible: =Index(ctxBombs, 6).Active && ctxMode = "Playing"
+      - recBomb7:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(240, 240, 240, 1)
+            X: =nfLeft + Index(ctxBombs, 7).X * nfColW - nfColW / 2
+            Y: =nfTop + Index(ctxBombs, 7).Y * nfScale
+            Width: =nfColW
+            Height: =4 * nfScale
+            BorderThickness: =0
+            Visible: =Index(ctxBombs, 7).Active && ctxMode = "Playing"
+      - imgExplode:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(ctxExplTicks > 5, nfSprExplode1, If(ctxExplTicks > 2, nfSprExplode2, nfSprExplode3))
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (ctxExplX - 4) * nfColW
+            Y: =nfTop + (ctxExplY - 4) * nfScale
+            Width: =8 * nfColW
+            Height: =8 * nfScale
+            Visible: =ctxExplTicks > 0
+            AccessibleLabel: ="Explode"
+            TabIndex: =-1
+      - imgShipExplode:
+          Control: Image@2.2.3
+          Properties:
+            Image: =If(ctxModeTicks > 9, nfSprExplode1, If(ctxModeTicks > 4, nfSprExplode2, nfSprExplode3))
+            ImagePosition: =ImagePosition.Fit
+            X: =nfLeft + (ctxShipX - 8) * nfColW
+            Y: =nfTop + 199 * nfScale
+            Width: =16 * nfColW
+            Height: =16 * nfScale
+            Visible: =ctxMode = "Dying"
+            AccessibleLabel: ="Ship Explode"
+            TabIndex: =-1
+      - lblTps:
+          Control: Label@2.5.1
+          Properties:
+            Text: =If(ctxTick > 20, Text(Round(ctxTick / Max(1, DateDiff(ctxStartTime, Now(), TimeUnit.Milliseconds) / 1000), 1)) & " tps", "")
+            Color: =RGBA(96, 96, 112, 1)
+            Font: =Font.'Courier New'
+            Size: =10
+            Align: =Align.Right
+            X: =nfLeft + 160 * nfColW - 120
+            Y: =nfTop + 240 * nfScale + 70
+            Width: =120
+            Height: =20
+            PaddingTop: =0
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            Wrap: =false
+      - tmrGame:
+          Control: Timer@2.1.0
+          Properties:
+            AutoStart: =true
+            Repeat: =true
+            AutoPause: =false
+            Duration: =50
+            Start: =!ctxPaused
+            Visible: =false
+            X: =nfLeft + 160 * nfColW + 20
+            Y: =nfTop
+            Width: =120
+            Height: =24
+            OnTimerEnd: |-
+              =With(
+                {
+                  tick: ctxTick + 1,
+                  playing: ctxMode = "Playing",
+                  convoyMoves: ctxMode = "Playing" || ctxMode = "Attract" || ctxMode = "Ready" || ctxMode = "GameOver",
+                  beginner: ctxLevel = 10,
+                  levelBoost: If(ctxLevel = 10, 0, ctxLevel)
+                },
+                With(
+                  {
+                    shipX: If(playing, Min(154, Max(6, ctxShipX + Max(-nfShipSpeed, Min(nfShipSpeed, sldMove.Value - ctxShipX)))), ctxShipX),
+                    convoyMin: -18 - (ctxMinCol - 1) * 12,
+                    convoyMax: 126 - (ctxMaxCol - 1) * 12,
+                    convoyXTry: ctxConvoyX + If(convoyMoves && Mod(tick, 2) = 0, ctxConvoyDir, 0)
+                  },
+                  With(
+                    {
+                      convoyX: Min(convoyMax, Max(convoyMin, convoyXTry)),
+                      convoyDir: If(convoyXTry > convoyMax, -1, If(convoyXTry < convoyMin, 1, ctxConvoyDir)),
+                      misLaunch: playing && ctxFire && !ctxMisActive,
+                      misMovedY: ctxMisY - nfMissileSpeed
+                    },
+                    With(
+                      {
+                        misActive0: misLaunch || (ctxMisActive && misMovedY >= 26),
+                        misX: If(ctxMisActive, ctxMisX, shipX),
+                        misY: If(misLaunch, 192 - nfMissileSpeed, If(ctxMisActive, misMovedY, 201)),
+                        // ---- difficulty and swarm state ----
+                        nDiff: Min(14, ctxDiffBase + ctxDiffExtra + levelBoost),
+                        aliveCount: Len(Substitute(ctxAlive, "0", "")),
+                        noCyanPurple: IsBlank(Find("1", Mid(ctxAlive, 10, 28))),
+                        anyCommander: !IsBlank(Find("1", Left(ctxAlive, 3))),
+                        emptyRow5: IsBlank(Find("1", Mid(ctxAlive, 28, 10))),
+                        emptyRow4: IsBlank(Find("1", Mid(ctxAlive, 18, 10)))
+                      },
+                      With(
+                        {
+                          endPhase: aliveCount <= 3 || noCyanPurple,
+                          nMaxSingles: Min(Int(nDiff / 2), 3) + 1,
+                          launchInterval: Max(12, Int(78 / (1 + nDiff / 2))),
+                          convoyInterval: If(noCyanPurple, 40, Max(40, (9 - Min(3, Int(nDiff / 4))) * 20)),
+                          nBombChecks: Min(3, 1 + Int(levelBoost / 4) + If(emptyRow5, 1, 0) + If(emptyRow5 && emptyRow4, 1, 0)),
+                          canAttack: playing && ctxMourn = 0,
+                          flank: If(ctxConvoyX - convoyMin < 10, -1, If(convoyMax - ctxConvoyX < 10, 1, If(Rand() < 0.5, -1, 1)))
+                        },
+                        With(
+                          {
+                            launchTimer0: If(canAttack, ctxLaunchTimer - 1, ctxLaunchTimer),
+                            convoyTimer0: If(canAttack, ctxConvoyTimer - 1, ctxConvoyTimer),
+                            freeSingle: LookUp(ctxDivers, Slot >= 4 && Slot <= 3 + nMaxSingles && !Active, Slot),
+                            convoyFree: !LookUp(ctxDivers, Slot = 1, Active),
+                            flankCol: If(flank = -1, ctxMinCol, ctxMaxCol)
+                          },
+                          With(
+                            {
+                              singleSlot: If(canAttack && launchTimer0 <= 0 && !IsBlank(freeSingle),
+                                LookUp(
+                                  Table(
+                                    {s: If(!anyCommander && flankCol >= 3 && flankCol <= 8, flankCol + 1, 0)},
+                                    {s: If(flankCol >= 2 && flankCol <= 9, flankCol + 8, 0)},
+                                    {s: flankCol + 17},
+                                    {s: flankCol + 27}
+                                  ),
+                                  s > 0 && Mid(ctxAlive, s, 1) = "1", s),
+                                Blank()),
+                              cmdSlot: If(canAttack && convoyTimer0 <= 0 && convoyFree && anyCommander,
+                                If(flank = -1,
+                                  If(Mid(ctxAlive, 1, 1) = "1", 1, If(Mid(ctxAlive, 2, 1) = "1", 2, 3)),
+                                  If(Mid(ctxAlive, 3, 1) = "1", 3, If(Mid(ctxAlive, 2, 1) = "1", 2, 1))),
+                                0)
+                            },
+                            With(
+                              {
+                                cmdCol: Switch(cmdSlot, 1, 4, 2, 6, 3, 7, 0)
+                              },
+                              With(
+                                {
+                                  escCands: Filter(Table({s: cmdCol}, {s: cmdCol + 1}, {s: cmdCol + 2}), cmdSlot > 0 && Mid(ctxAlive, s, 1) = "1")
+                                },
+                                With(
+                                  {
+                                    esc1: If(CountRows(escCands) >= 1, First(escCands).s, 0),
+                                    esc2: If(CountRows(escCands) >= 2, Index(escCands, 2).s, 0)
+                                  },
+                                  With(
+                                    {
+                                      launches: Filter(
+                                        Table(
+                                          {k: Coalesce(freeSingle, 0), h: Coalesce(singleSlot, 0), esc: 0},
+                                          {k: 1, h: cmdSlot, esc: If(esc1 > 0, 1, 0) + If(esc2 > 0, 1, 0)},
+                                          {k: 2, h: esc1, esc: 0},
+                                          {k: 3, h: esc2, esc: 0}
+                                        ), h > 0 && k > 0)
+                                    },
+                                    With(
+                                      {
+                                        // alive string after this tick's launches
+                                        aliveL: Concat(ForAll(Sequence(37) As n,
+                                          {v: If(!IsBlank(LookUp(launches, h = n.Value)), "0", Mid(ctxAlive, n.Value, 1))}), v),
+                                        // new diver records for launched slots
+                                        diversL: ForAll(ctxDivers As d,
+                                          With({L: LookUp(launches, k = d.Slot)},
+                                            If(IsBlank(L), d,
+                                              With({h: L.h},
+                                                With(
+                                                  {
+                                                    hc: If(h <= 3, Switch(h, 1, 4, 2, 6, 7), If(h <= 9, h - 1, If(h <= 17, h - 8, If(h <= 27, h - 17, h - 27)))),
+                                                    hr: If(h <= 3, 1, If(h <= 9, 2, If(h <= 17, 3, If(h <= 27, 4, 5)))),
+                                                    hk: If(h <= 3, "Commander", If(h <= 9, "Hornet", If(h <= 17, "Emissary", "Drone")))
+                                                  },
+                                                  With({x0: 22 + (hc - 1) * 12 + 4 + convoyX, y0: 28 + (hr - 1) * 10 + 4},
+                                                    {Slot: d.Slot, Active: true, Kind: hk, Home: h, Col: hc, Row: hr, X: x0, Y: y0,
+                                                     Stage: "Arc", StageTick: 0, Dir: flank, StartX: x0, StartY: y0,
+                                                     Pivot: x0, Amp: 0, SignDX: 1, Phase: 0, EscLaunched: L.esc, EscKilled: 0}))))))
+                                      },
+                                      With(
+                                        {
+                                          // ---- diver motion ----
+                                          diversM: ForAll(diversL As d,
+                                            If(!d.Active || !playing, d,
+                                              If(d.Stage = "Arc",
+                                                With({t: d.StageTick + 1},
+                                                  With({nx: d.StartX + d.Dir * 10 * (1 - Cos(t * Pi() / 16)), ny: d.StartY - 10 * Sin(t * Pi() / 16)},
+                                                    If(t < 8,
+                                                      Patch(d, {X: nx, Y: ny, StageTick: t}),
+                                                      With({tdx: Max(30, Min(80, Abs(shipX - nx))), sgn: If(shipX >= nx, 1, -1)},
+                                                        Patch(d, {X: nx, Y: ny, StageTick: 0, Stage: "Dive", SignDX: sgn,
+                                                                  Pivot: nx + sgn * tdx / 2, Amp: tdx / 2 * (0.6 + Rand() * 0.8), Phase: 0}))))),
+                                              If(d.Stage = "Dive" || d.Stage = "Charge",
+                                                With({spd: If(d.Stage = "Charge" || d.Y > 140, 4, 3), ph: d.Phase + 0.35},
+                                                  With({ny: d.Y + spd, nx0: d.Pivot - d.SignDX * Cos(ph) * d.Amp + (Rand() - 0.5) * 2},
+                                                    With({nx: If(ctxWave <= 2, Min(146, Max(14, nx0)), nx0)},
+                                                      If(ny <= 240 && nx >= -8 && nx <= 168,
+                                                        Patch(d, {X: nx, Y: ny, Phase: ph, StageTick: d.StageTick + 1}),
+                                                        If(d.Kind = "Commander" && d.EscLaunched = 0,
+                                                          Patch(d, {Active: false}),
+                                                          If(endPhase || d.Stage = "Charge",
+                                                            With({rx: 20 + Rand() * 120},
+                                                              Patch(d, {Stage: "Charge", X: rx, Y: -10, Pivot: rx, Amp: 30, Phase: 0,
+                                                                        SignDX: If(shipX >= rx, 1, -1), StageTick: 0})),
+                                                            Patch(d, {Stage: "Return", Y: -10, X: 22 + (d.Col - 1) * 12 + 4 + convoyX, StageTick: 0}))))))),
+                                              If(d.Stage = "Return",
+                                                With({hx: 22 + (d.Col - 1) * 12 + 4 + convoyX, hy: 28 + (d.Row - 1) * 10 + 4},
+                                                  Patch(d, {X: hx, Y: Min(hy, d.Y + 3)})),
+                                                d)))))
+                                        },
+                                        With(
+                                          {
+                                            // ---- escorts follow their Commander ----
+                                            diversS: With({c: LookUp(diversM, Slot = 1)},
+                                              ForAll(diversM As d,
+                                                If((d.Slot = 2 || d.Slot = 3) && d.Active && c.Active && c.Stage <> "Return",
+                                                  Patch(d, {X: c.X + If(d.Slot = 2, -6, 6), Y: c.Y + 10, Stage: c.Stage,
+                                                            Pivot: c.Pivot + If(d.Slot = 2, -6, 6), Amp: c.Amp, SignDX: c.SignDX, Phase: c.Phase}),
+                                                  d))),
+                                            // ---- bombs move ----
+                                            bombsM: ForAll(ctxBombs As b,
+                                              If(b.Active && playing,
+                                                With({ny: b.Y + 6, nx: b.X + b.DX}, Patch(b, {X: nx, Y: ny, Active: ny <= 240 && nx >= 0 && nx <= 160})),
+                                                If(playing, b, Patch(b, {Active: false}))))
+                                          },
+                                          With(
+                                            {
+                                              shooter: If(canAttack && !(beginner && ctxWave <= 16),
+                                                LookUp(diversS, Active && (Stage = "Dive" || (Stage = "Charge" && Y > 40)) &&
+                                                  ((Y - If(Stage = "Charge" || Y > 144, 4, 3) < 130 && Y >= 130) ||
+                                                   (nBombChecks >= 2 && Y - If(Stage = "Charge" || Y > 144, 4, 3) < 155 && Y >= 155) ||
+                                                   (nBombChecks >= 3 && Y - If(Stage = "Charge" || Y > 144, 4, 3) < 180 && Y >= 180))),
+                                                Blank()),
+                                              firstFree: LookUp(bombsM, !Active, Slot),
+                                              retSlot: LookUp(diversS, Active && Stage = "Return" && Y >= 28 + (Row - 1) * 10 + 4, Slot)
+                                            },
+                                            With(
+                                              {
+                                                bombs2: If(IsBlank(shooter) || IsBlank(firstFree), bombsM,
+                                                  ForAll(bombsM As b,
+                                                    If(b.Slot = firstFree,
+                                                      {Slot: b.Slot, Active: true, X: shooter.X, Y: shooter.Y + 6,
+                                                       DX: Max(-2, Min(2, (shipX - shooter.X) / 40 + (Rand() - 0.5) * If(levelBoost >= 5, 1.6, 0.8)))},
+                                                      b))),
+                                                // ---- missile vs formation ----
+                                                relX: misX - 22 - convoyX,
+                                                relY: misY - 28
+                                              },
+                                              With(
+                                                {
+                                                  col: If(relX >= 0 && Mod(relX, 12) < 8, Int(relX / 12) + 1, 0),
+                                                  row: If(misActive0 && playing && relY >= 0 && relY < 50 && Mod(relY, 10) < 8, Int(relY / 10) + 1, 0),
+                                                  // ---- missile / nose vs divers ----
+                                                  hitDiver: If(playing && misActive0,
+                                                    LookUp(diversS, Active && Abs(X - misX) < 5 && misY < Y + 4 && misY + 4 > Y - 4), Blank()),
+                                                  noseDiver: If(playing && !misActive0,
+                                                    LookUp(diversS, Active && Abs(X - shipX) < 5 && Y + 4 >= 201 && Y - 4 <= 205), Blank())
+                                                },
+                                                With(
+                                                  {
+                                                    slot: If(col >= 1 && col <= 10 && row >= 1,
+                                                      Switch(row,
+                                                        1, Switch(col, 4, 1, 6, 2, 7, 3, 0),
+                                                        2, If(col >= 3 && col <= 8, col + 1, 0),
+                                                        3, If(col >= 2 && col <= 9, col + 8, 0),
+                                                        4, 17 + col,
+                                                        5, 27 + col,
+                                                        0),
+                                                      0),
+                                                    killed: If(IsBlank(hitDiver), noseDiver, hitDiver)
+                                                  },
+                                                  With(
+                                                    {
+                                                      hit: slot > 0 && Mid(aliveL, slot, 1) = "1",
+                                                      pts: Switch(row, 1, 60, 2, 50, 3, 40, 30),
+                                                      dPts: If(IsBlank(killed), 0,
+                                                        Switch(killed.Kind, "Drone", 60, "Emissary", 80, "Hornet", 100,
+                                                          If(killed.EscLaunched = 0, 150, If(killed.EscLaunched = 1, 200, If(killed.EscKilled = 2, 800, 300))))),
+                                                      cmdKilled: !IsBlank(killed) && killed.Kind = "Commander"
+                                                    },
+                                                    With(
+                                                      {
+                                                        // ---- apply kills and returns to divers ----
+                                                        diversK: ForAll(diversS As d,
+                                                          If(!IsBlank(killed) && d.Slot = killed.Slot, Patch(d, {Active: false}),
+                                                          If(!IsBlank(killed) && (killed.Slot = 2 || killed.Slot = 3) && d.Slot = 1, Patch(d, {EscKilled: d.EscKilled + 1}),
+                                                          If(!IsBlank(retSlot) && d.Slot = retSlot, Patch(d, {Active: false}),
+                                                          d)))),
+                                                        aliveH: If(hit, Left(aliveL, slot - 1) & "0" & Mid(aliveL, slot + 1, 37), aliveL),
+                                                        retHome: If(IsBlank(retSlot), 0, LookUp(diversS, Slot = retSlot, Home))
+                                                      },
+                                                      With(
+                                                        {
+                                                          aliveR: If(retHome > 0, Left(aliveH, retHome - 1) & "1" & Mid(aliveH, retHome + 1, 37), aliveH),
+                                                          score: Min(999990, ctxScore + If(hit, pts, 0) + dPts),
+                                                          // ---- player death ----
+                                                          shipHit: playing && (
+                                                            !IsBlank(LookUp(bombs2, Active && Abs(X - shipX) < 5 && Y + 4 >= 205 && Y <= 213)) ||
+                                                            !IsBlank(LookUp(diversK, Active && Abs(X - shipX) < 8 && Y + 4 >= 205 && Y - 4 <= 213)))
+                                                        },
+                                                        With(
+                                                          {
+                                                            // on death every diver goes home instantly
+                                                            aliveD: If(shipHit,
+                                                              Concat(ForAll(Sequence(37) As n,
+                                                                {v: If(Mid(aliveR, n.Value, 1) = "1" || !IsBlank(LookUp(diversK, Active && Home = n.Value)), "1", "0")}), v),
+                                                              aliveR),
+                                                            diversD: If(shipHit, nfDiversEmpty, diversK),
+                                                            bombsD: If(shipHit, nfBombsEmpty, bombs2)
+                                                          },
+                                                          With(
+                                                            {
+                                                              cols: Filter(Sequence(10) As c,
+                                                                Mid(aliveD, 17 + c.Value, 1) = "1" || Mid(aliveD, 27 + c.Value, 1) = "1" ||
+                                                                (c.Value >= 2 && c.Value <= 9 && Mid(aliveD, c.Value + 8, 1) = "1") ||
+                                                                (c.Value >= 3 && c.Value <= 8 && Mid(aliveD, c.Value + 1, 1) = "1") ||
+                                                                (c.Value = 4 && Mid(aliveD, 1, 1) = "1") || (c.Value = 6 && Mid(aliveD, 2, 1) = "1") || (c.Value = 7 && Mid(aliveD, 3, 1) = "1")),
+                                                              cleared: IsBlank(Find("1", aliveD)) && CountIf(diversD, Active) = 0,
+                                                              modeTicks0: Max(0, ctxModeTicks - 1)
+                                                            },
+                                                            With(
+                                                              {
+                                                                nextMode:
+                                                                  If(shipHit, "Dying",
+                                                                  If(playing && cleared, "WaveClear",
+                                                                  If(ctxMode = "Ready" && modeTicks0 = 0, "Playing",
+                                                                  If(ctxMode = "Dying" && modeTicks0 = 0, If(ctxLives > 1, "Ready", "GameOver"),
+                                                                  If(ctxMode = "WaveClear" && modeTicks0 = 0, "Ready",
+                                                                  If(ctxMode = "GameOver" && modeTicks0 = 0, "Attract",
+                                                                  ctxMode)))))),
+                                                                bonusNow: playing && !ctxBonus && score >= 5000,
+                                                                waveTick: If(playing && ctxMourn = 0, ctxWaveTicks + 1, ctxWaveTicks)
+                                                              },
+                                                              With(
+                                                                {
+                                                                  newWave: nextMode = "Ready" && ctxMode = "WaveClear",
+                                                                  respawn: nextMode = "Ready" && ctxMode = "Dying",
+                                                                  lostLife: ctxMode = "Dying" && modeTicks0 = 0,
+                                                                  aggStep: waveTick >= 400
+                                                                },
+                                                                UpdateContext({
+                                                                  ctxTick: tick,
+                                                                  ctxMode: nextMode,
+                                                                  ctxModeTicks:
+                                                                    If(nextMode = ctxMode, modeTicks0,
+                                                                    Switch(nextMode, "Dying", 13, "WaveClear", 85, "Ready", 40, "GameOver", 200, 0)),
+                                                                  ctxShipX: If(respawn, 80, shipX),
+                                                                  ctxConvoyX: If(newWave, 0, convoyX),
+                                                                  ctxConvoyDir: convoyDir,
+                                                                  ctxFire: false,
+                                                                  ctxMisActive: misActive0 && !hit && IsBlank(hitDiver) && !shipHit,
+                                                                  ctxMisX: misX,
+                                                                  ctxMisY: If(misActive0 && !hit && IsBlank(hitDiver) && !shipHit, misY, 201),
+                                                                  ctxAlive: If(newWave, nfAliveAll, aliveD),
+                                                                  ctxMinCol: If(newWave || CountRows(cols) = 0, 1, Min(cols, Value)),
+                                                                  ctxMaxCol: If(newWave || CountRows(cols) = 0, 10, Max(cols, Value)),
+                                                                  ctxDivers: If(newWave, nfDiversEmpty, diversD),
+                                                                  ctxBombs: If(newWave, nfBombsEmpty, bombsD),
+                                                                  ctxWave: If(newWave, ctxWave + 1, ctxWave),
+                                                                  ctxScore: score,
+                                                                  ctxHigh: If(nextMode = "GameOver" && ctxMode = "Dying", Max(ctxHigh, score), ctxHigh),
+                                                                  ctxLives: If(lostLife, ctxLives - 1, If(bonusNow, Min(5, ctxLives + 1), ctxLives)),
+                                                                  ctxBonus: ctxBonus || bonusNow,
+                                                                  ctxLaunchTimer: If(newWave || respawn, launchInterval,
+                                                                    If(!IsBlank(singleSlot), launchInterval, If(canAttack && launchTimer0 <= 0, 6, launchTimer0))),
+                                                                  ctxConvoyTimer: If(newWave || respawn, convoyInterval,
+                                                                    If(cmdSlot > 0, convoyInterval, If(canAttack && convoyTimer0 <= 0, 20, convoyTimer0))),
+                                                                  ctxMourn: If(cmdKilled, 80, Max(0, ctxMourn - 1)),
+                                                                  ctxDiffBase: If(newWave, Min(7, ctxDiffBase + 1), ctxDiffBase),
+                                                                  ctxDiffExtra: If(newWave, 0, If(shipHit, Max(0, ctxDiffExtra - 1), If(aggStep, Min(7, ctxDiffExtra + 1), ctxDiffExtra))),
+                                                                  ctxWaveTicks: If(newWave || aggStep, 0, waveTick),
+                                                                  ctxExplTicks: If(hit || !IsBlank(killed), 8, Max(0, ctxExplTicks - 1)),
+                                                                  ctxExplX: If(!IsBlank(killed), killed.X, If(hit, 22 + (col - 1) * 12 + 4 + convoyX, ctxExplX)),
+                                                                  ctxExplY: If(!IsBlank(killed), killed.Y, If(hit, 28 + (row - 1) * 10 + 4, ctxExplY)),
+                                                                  ctxPopupTicks: If(cmdKilled || (hit && row = 1), 17, Max(0, ctxPopupTicks - 1)),
+                                                                  ctxPopupX: If(cmdKilled, killed.X, If(hit && row = 1, misX, ctxPopupX)),
+                                                                  ctxPopupY: If(cmdKilled, killed.Y, If(hit && row = 1, 28, ctxPopupY)),
+                                                                  ctxPopupText: If(cmdKilled, Text(dPts), If(hit && row = 1, Text(pts), ctxPopupText))
+                                                                })
+                                                              )
+                                                            )
+                                                          )
+                                                        )
+                                                      )
+                                                    )
+                                                  )
+                                                )
+                                              )
+                                            )
+                                          )
+                                        )
+                                      )
+                                    )
+                                  )
+                                )
+                              )
+                            )
+                          )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
