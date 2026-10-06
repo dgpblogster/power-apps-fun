@@ -330,6 +330,7 @@ Tuning changes made after playtesting, superseding earlier sections:
 | Earthship 2 columns per tick (section 3) | **6 columns per tick** (`nfShipSpeed`) | The slider is position-based; at 2 the ship lagged the handle by seconds |
 | Missile 11 lines per tick, launched on the next tick (sections 3, 5) | **16 lines per tick**, launched **in the button press** | Fire felt slow: tick latency plus a 0.75 s flight before the next shot |
 | No diagnostics | "tps" readout under the playfield | Shows whether the browser sustains 20 ticks per second |
+| Point-sample collision at the missile tip (section 9) | **Swept test** over the segment the missile covered this tick, lowest intersecting alive row wins | At 16 lines per tick the missile skipped 8-line-tall aliens, worst on the top row |
 
 Deviations discovered in the build: the accessibility checker flags every sprite Image for a tab stop (they
 carry `TabIndex -1` as decorative); `Label@2.5.1` has no `AccessibleLabel`, so HUD text relies on its visible
