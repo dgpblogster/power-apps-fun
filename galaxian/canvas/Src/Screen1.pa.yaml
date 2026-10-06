@@ -1776,10 +1776,27 @@ Screens:
                                               With(
                                                 {
                                                   col: If(relX >= 0 && Mod(relX, 12) < 8, Int(relX / 12) + 1, 0),
-                                                  row: If(misActive0 && playing && relY >= 0 && relY < 50 && Mod(relY, 10) < 8, Int(relY / 10) + 1, 0),
+                                                  // swept test: the lowest alive row whose 8-line band intersects the segment the missile covered this tick
+                                                  row: If(misActive0 && playing && relX >= 0 && Mod(relX, 12) < 8,
+                                                    Coalesce(
+                                                      Max(
+                                                        Filter(Sequence(5) As r,
+                                                          misY < 28 + (r.Value - 1) * 10 + 8 && misY + nfMissileSpeed + 4 > 28 + (r.Value - 1) * 10 &&
+                                                          With({c: Int(relX / 12) + 1},
+                                                            With({s: Switch(r.Value,
+                                                                    1, Switch(c, 4, 1, 6, 2, 7, 3, 0),
+                                                                    2, If(c >= 3 && c <= 8, c + 1, 0),
+                                                                    3, If(c >= 2 && c <= 9, c + 8, 0),
+                                                                    4, 17 + c,
+                                                                    5, 27 + c,
+                                                                    0)},
+                                                              s > 0 && Mid(aliveL, s, 1) = "1"))),
+                                                        Value),
+                                                      0),
+                                                    0),
                                                   // ---- missile / nose vs divers ----
                                                   hitDiver: If(playing && misActive0,
-                                                    LookUp(diversS, Active && Abs(X - misX) < 5 && misY < Y + 4 && misY + 4 > Y - 4), Blank()),
+                                                    LookUp(diversS, Active && Abs(X - misX) < 5 && misY < Y + 4 && misY + nfMissileSpeed + 4 > Y - 4), Blank()),
                                                   noseDiver: If(playing && !misActive0,
                                                     LookUp(diversS, Active && Abs(X - shipX) < 5 && Y + 4 >= 201 && Y - 4 <= 205), Blank())
                                                 },
