@@ -66,3 +66,7 @@ Projects follow a common shape (see each project's README for specifics):
 - `tools/` — helper scripts for code generation and maintenance
 - `build.ps1` — builds the `.msapp` and solution zip with the Power Platform CLI (`pac`), and imports to the environment with `-Import`
 - `dist/` — build output (git-ignored; regenerate with `build.ps1`)
+
+## Contributing
+
+Changes land through pull requests; `main` is protected. See [CONTRIBUTING.md](CONTRIBUTING.md).
