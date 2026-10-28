@@ -26,7 +26,7 @@ Play: https://apps.powerapps.com/play/e/e57d0c49-8edb-e5a5-af15-8a62479e341a/a/d
 | Console keys | START, SELECT (level 0-9, B), OPTION (reserved for two-player), PAUSE, RESET as on-screen buttons. |
 | HUD | Level digit (blue), score (yellow), reserve ships (pink), wave flags (red) top row; high score bottom-left; "GALAXIAN" title in Attract, "PLAYER ONE" before each life, "GAME OVER". |
 
-Not yet built (see [docs/01-game-spec.md](docs/01-game-spec.md) section 19): wave-10 surprise symbols,
+Not yet built (see [docs/03-backlog.md](docs/03-backlog.md) and [docs/01-game-spec.md](docs/01-game-spec.md) section 19): wave-10 surprise symbols,
 flags past 16, attract-mode demo divers, two-player alternating mode, sound, Dataverse high-score table.
 
 ## How it runs inside canvas constraints
@@ -59,6 +59,7 @@ tools/calls/*.json        Call sequences for mcp-canvas.js
 solution/src/             SolutionPackager-format solution (Other/*.xml + CanvasApps metadata)
 docs/01-game-spec.md      Game specification (v1.1, Atari 800XL target) and build plan
 docs/02-platform-decision.md   Why canvas rather than Code Apps; constraint-to-design mapping; build notes
+docs/03-backlog.md        Improvement backlog: input alternatives, AI ideas, remaining spec items
 docs/research/            Atari port, arcade mechanics, visuals/audio, history
 build.ps1                 Generate, pack, push, import, publish — see below
 dist/                     Build output (msapp + solution zip)
