@@ -1,0 +1,6 @@
+[
+  { "tool": "connect", "args": { "environment_id": "e57d0c49-8edb-e5a5-af15-8a62479e341a", "app_id": "80f9c4ce-e9a8-4dd1-a8d2-a9bb969fc958", "environment_category": "prod", "login_hint": "marianog@maximumglobal.biz" } },
+  { "tool": "get_appchecker_errors", "args": {} },
+  { "tool": "get_accessibility_errors", "args": {} },
+  { "tool": "sync_canvas", "args": { "directoryPath": "C:/AL/Frogger/scratch/synced" } }
+]
