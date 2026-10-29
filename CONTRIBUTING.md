@@ -15,8 +15,8 @@ force pushes, and branch deletion are blocked for everyone, including the reposi
 ## Project conventions
 
 - Each top-level folder is a self-contained project with its own `README.md`, source, and `build.ps1`.
-- Canvas app source lives in `canvas/Src/*.pa.yaml`. In `galaxian/` that YAML is **generated** by
-  `tools/gen_app.py`; edit `tools/game_logic.py`, `tools/sprites.py`, or `tools/gen_app.py` and regenerate
-  rather than editing the YAML by hand.
+- Canvas app source lives in `canvas/Src/*.pa.yaml`. In `galaxian/` and `frogger/` that YAML is **generated** by
+  `tools/gen_app.py`; edit `tools/game_logic.py`, `tools/sprites.py`, `tools/sounds.py`, or `tools/gen_app.py` and
+  regenerate rather than editing the YAML by hand.
 - Keep art, sound, and text original. These projects are homages and are not affiliated with the rights
   holders of the games that inspired them.
