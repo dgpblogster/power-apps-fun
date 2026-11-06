@@ -2,8 +2,10 @@
   "extends": "./node_modules/pcf-scripts/tsconfig_base.json",
   "compilerOptions": {
     "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "typeRoots": ["node_modules/@types"],
     "strict": true,
     "noUnusedLocals": true
-  }
+  },
+  "exclude": ["./node_modules", "./harness", "./out"]
 }

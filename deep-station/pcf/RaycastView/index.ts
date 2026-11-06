@@ -89,6 +89,8 @@ export class RaycastView implements ComponentFramework.StandardControl<IInputs, 
         this.paused = p.Paused?.raw === true;
         this.input.setEnabled(!this.paused);
         this.showDiag = p.ShowDiag?.raw === true;
+        this.input.touchForced = p.ShowTouch?.raw === true;
+        if (this.input.touchForced) this.input.touchOn = true;
         this.sound.muted = p.Muted?.raw === true;
         const tm = p.TickMs?.raw;
         if (tm && tm > 0) this.tickMs = tm;
@@ -239,6 +241,8 @@ export class RaycastView implements ComponentFramework.StandardControl<IInputs, 
             g.textAlign = "center";
             g.fillText("PAUSED", W / 2, H / 2);
             g.textAlign = "left";
+        } else if (this.input.touchOn) {
+            this.drawTouch();
         } else if (!this.input.locked && document.activeElement !== this.root) {
             g.fillStyle = "rgba(0,0,0,0.5)";
             g.fillRect(0, H - 34, W, 34);
@@ -249,6 +253,32 @@ export class RaycastView implements ComponentFramework.StandardControl<IInputs, 
         if (this.showDiag) this.drawDiag(W);
 
         if (!this.ready) { this.ready = true; this.input.dirty = true; }
+    }
+
+    private drawTouch() {
+        const g = this.g, i = this.input, L = i.touchLayout();
+        const sx = this.canvas.width / L.w, sy = this.canvas.height / L.h;
+        g.save();
+        g.scale(sx, sy);
+        g.lineWidth = 3;
+        const ring = (x: number, y: number, r: number, fill: string, text: string) => {
+            g.fillStyle = fill; g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill();
+            g.strokeStyle = "rgba(232,208,128,0.7)"; g.stroke();
+            g.fillStyle = "rgba(255,240,200,0.9)"; g.font = `bold ${Math.round(r * 0.42)}px monospace`;
+            g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(text, x, y);
+        };
+        ring(L.fire.x, L.fire.y, L.r, (i.keys & 32) ? "rgba(220,80,40,0.55)" : "rgba(120,40,20,0.35)", "FIRE");
+        ring(L.use.x, L.use.y, L.r * 0.8, "rgba(60,60,40,0.35)", "USE");
+        if (i.stick) {
+            g.strokeStyle = "rgba(232,208,128,0.5)";
+            g.beginPath(); g.arc(i.stick.ox, i.stick.oy, L.stickR, 0, Math.PI * 2); g.stroke();
+            g.fillStyle = "rgba(232,208,128,0.45)";
+            g.beginPath(); g.arc(i.stick.x, i.stick.y, L.r * 0.55, 0, Math.PI * 2); g.fill();
+        } else {
+            g.fillStyle = "rgba(232,208,128,0.55)"; g.font = "13px monospace"; g.textAlign = "left"; g.textBaseline = "alphabetic";
+            g.fillText("left thumb: move   right side: drag to turn", 14, L.h - 14);
+        }
+        g.restore();
     }
 
     private drawDiag(W: number) {

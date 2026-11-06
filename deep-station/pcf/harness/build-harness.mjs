@@ -17,5 +17,5 @@ print(json.dumps({"w": lv.w, "h": lv.h, "cells": lv.cells, "light": lv.light, "s
 writeFileSync(join(dist, "level.json"), execFileSync("python3", ["-I", "-c", py]).toString());
 await build({ entryPoints: [join(here, "harness.ts")], bundle: true, outfile: join(dist, "harness.js"), format: "iife", target: "es2020", logLevel: "warning" });
 writeFileSync(join(dist, "index.html"), `<!doctype html><meta charset="utf-8"><title>RaycastView harness</title>
-<style>body{margin:0;background:#111}#host{width:960px;height:600px}</style><div id="host"></div><script src="harness.js"></script>`);
+<style>body{margin:0;background:#111}#host{width:100vw;height:100vh}</style><div id="host"></div><script src="harness.js"></script>`);
 console.log("harness built:", join(dist, "index.html"));

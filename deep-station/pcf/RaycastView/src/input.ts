@@ -32,6 +32,13 @@ export class Input {
     lockRefused = false;
 
     private held = 0;          // keyboard bits
+    private touchBits = 0;     // bits from the on-screen stick and buttons
+    /** Touch overlay: shown when forced by ShowTouch or as soon as a finger touches the view. */
+    touchOn = false;
+    touchForced = false;
+    stick: { id: number; ox: number; oy: number; x: number; y: number } | null = null;
+    private look: { id: number; x: number } | null = null;
+    private buttons = new Map<number, number>(); // pointerId -> bit held by a button
     private mouseFire = false;
     private dragging = false;
     private dragDist = 0;
@@ -48,6 +55,11 @@ export class Input {
         surface.addEventListener("mouseleave", this.onMouseUp);
         surface.addEventListener("wheel", this.onWheel, { passive: false });
         surface.addEventListener("contextmenu", e => e.preventDefault());
+        surface.style.touchAction = "none";
+        surface.addEventListener("pointerdown", this.onPointerDown);
+        surface.addEventListener("pointermove", this.onPointerMove);
+        surface.addEventListener("pointerup", this.onPointerUp);
+        surface.addEventListener("pointercancel", this.onPointerUp);
         const doc = root.ownerDocument;
         doc.addEventListener("pointerlockchange", this.onLockChange);
         doc.addEventListener("pointerlockerror", this.onLockError);
@@ -63,6 +75,10 @@ export class Input {
         s.removeEventListener("mouseup", this.onMouseUp);
         s.removeEventListener("mouseleave", this.onMouseUp);
         s.removeEventListener("wheel", this.onWheel);
+        s.removeEventListener("pointerdown", this.onPointerDown);
+        s.removeEventListener("pointermove", this.onPointerMove);
+        s.removeEventListener("pointerup", this.onPointerUp);
+        s.removeEventListener("pointercancel", this.onPointerUp);
         doc.removeEventListener("pointerlockchange", this.onLockChange);
         doc.removeEventListener("pointerlockerror", this.onLockError);
         if (doc.pointerLockElement === s) doc.exitPointerLock();
@@ -74,6 +90,7 @@ export class Input {
         if (!on) {
             this.held = 0;
             this.mouseFire = false;
+            this.clearTouch();
             this.refreshKeys();
             const doc = this.root.ownerDocument;
             if (doc.pointerLockElement === this.surface) doc.exitPointerLock();
@@ -101,7 +118,7 @@ export class Input {
     }
 
     private refreshKeys() {
-        const k = this.held | (this.mouseFire ? BIT.fire : 0);
+        const k = this.held | this.touchBits | (this.mouseFire ? BIT.fire : 0);
         if (k !== this.keys) { this.keys = k; this.bump(); }
     }
 
@@ -133,6 +150,8 @@ export class Input {
     private onBlur = () => { this.held = 0; this.mouseFire = false; this.refreshKeys(); };
 
     private onMouseDown = (e: MouseEvent) => {
+        if (this.touchOn && (e as PointerEvent).pointerType === "touch") return;
+        if (this.lastTouchAt && performance.now() - this.lastTouchAt < 800) return; // synthetic mouse after touch
         this.onGesture();
         this.root.focus({ preventScroll: true });
         if (!this.enabled) return;
@@ -167,6 +186,88 @@ export class Input {
             setTimeout(() => { this.mouseFire = false; this.refreshKeys(); }, 120);
         }
         this.dragging = false;
+    };
+
+    // ---- touch: left-thumb stick, right-side drag to turn, FIRE and USE buttons ----
+
+    private lastTouchAt = 0;
+
+    /** Button layout in surface CSS pixels; also used by the renderer to draw the overlay. */
+    touchLayout() {
+        const w = this.surface.clientWidth || 960, h = this.surface.clientHeight || 600;
+        const r = Math.max(34, Math.min(w, h) * 0.085);
+        return {
+            w, h, r,
+            fire: { x: w - r * 1.6, y: h - r * 1.6 },
+            use: { x: w - r * 3.9, y: h - r * 1.25 },
+            stickR: r * 1.5,
+        };
+    }
+
+    private clearTouch() {
+        this.stick = null;
+        this.look = null;
+        this.buttons.clear();
+        this.touchBits = 0;
+    }
+
+    private stickBits(): number {
+        const st = this.stick;
+        if (!st) return 0;
+        const L = this.touchLayout();
+        const dx = (st.x - st.ox) / L.stickR, dy = (st.y - st.oy) / L.stickR;
+        let b = 0;
+        if (dy < -0.3) b |= BIT.fwd;
+        if (dy > 0.3) b |= BIT.back;
+        if (dx < -0.35) b |= BIT.left;
+        if (dx > 0.35) b |= BIT.right;
+        if (Math.hypot(dx, dy) > 0.85) b |= BIT.run;
+        return b;
+    }
+
+    private recomputeTouch() {
+        let b = this.stickBits();
+        for (const bit of this.buttons.values()) if (bit === BIT.fire) b |= BIT.fire;
+        this.touchBits = b;
+        this.refreshKeys();
+    }
+
+    private onPointerDown = (e: PointerEvent) => {
+        if (e.pointerType !== "touch") return;
+        this.lastTouchAt = performance.now();
+        this.touchOn = true;
+        this.onGesture();
+        e.preventDefault();
+        if (!this.enabled) return;
+        try { this.surface.setPointerCapture(e.pointerId); } catch { /* not supported */ }
+        const rect = this.surface.getBoundingClientRect();
+        const x = e.clientX - rect.left, y = e.clientY - rect.top;
+        const L = this.touchLayout();
+        if (Math.hypot(x - L.fire.x, y - L.fire.y) < L.r) { this.buttons.set(e.pointerId, BIT.fire); this.recomputeTouch(); return; }
+        if (Math.hypot(x - L.use.x, y - L.use.y) < L.r * 0.8) { this.useSeq++; this.bump(); this.buttons.set(e.pointerId, 0); return; }
+        if (x < L.w * 0.45 && !this.stick) { this.stick = { id: e.pointerId, ox: x, oy: y, x, y }; this.recomputeTouch(); return; }
+        if (!this.look) this.look = { id: e.pointerId, x };
+    };
+
+    private onPointerMove = (e: PointerEvent) => {
+        if (e.pointerType !== "touch" || !this.enabled) return;
+        const rect = this.surface.getBoundingClientRect();
+        const x = e.clientX - rect.left, y = e.clientY - rect.top;
+        if (this.stick && this.stick.id === e.pointerId) { this.stick.x = x; this.stick.y = y; this.recomputeTouch(); return; }
+        if (this.look && this.look.id === e.pointerId) {
+            const L = this.touchLayout();
+            this.turn(((x - this.look.x) / L.w) * 220); // a full-width swipe turns 220 degrees
+            this.look.x = x;
+        }
+    };
+
+    private onPointerUp = (e: PointerEvent) => {
+        if (e.pointerType !== "touch") return;
+        this.lastTouchAt = performance.now();
+        if (this.stick && this.stick.id === e.pointerId) this.stick = null;
+        if (this.look && this.look.id === e.pointerId) this.look = null;
+        this.buttons.delete(e.pointerId);
+        this.recomputeTouch();
     };
 
     private onWheel = (e: WheelEvent) => {

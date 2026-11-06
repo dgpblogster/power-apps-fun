@@ -25,6 +25,29 @@ tools/mcp-canvas.js       stdio client for the Canvas Authoring MCP server (from
 levels/m0-test.txt        the spike level: 28 x 16, 7 doors, 12 drones
 ```
 
+## Install from a phone or any browser (no tools needed)
+
+`release/DeepStation_unmanaged.zip` is built in the cloud by `./build.sh` and holds the RaycastView code
+component and the app. Everything below works from a browser; only step 3 really wants a desktop-sized screen.
+
+1. On GitHub, open `deep-station/release/DeepStation_unmanaged.zip` and choose **Download raw file**.
+2. In [make.powerapps.com](https://make.powerapps.com) (on a phone, switch the browser to **Desktop site**),
+   pick the **Workbench** environment, **Solutions > Import solution**, choose the zip, **Import**. It merges into
+   the existing DeepStation solution and adds an app called **Deep Station M0**.
+3. Open **Deep Station M0** for edit in Studio once, then **Save** and **Publish**. Microsoft requires this for an
+   app packed from YAML: Studio validates the formulas on first open. If Studio reports formula errors, send
+   them to the session; the generator gets fixed and a new zip is built.
+4. Play it in the **Power Apps** Android app (landscape). Touch controls appear on the first touch: left thumb
+   moves (push far to run), drag on the right side turns, **FIRE** and **USE** buttons bottom right.
+
+## Build in the cloud or on Linux
+
+```bash
+cd deep-station
+./build.sh                  # -> release/DeepStation_unmanaged.zip
+ENEMY_SLOTS=8 ./build.sh    # fewer enemy slots
+```
+
 ## Build and push (Windows, PowerShell 7)
 
 Prerequisites: Node 18+, Python 3, `pac` 2.11+ signed in to Workbench, the .NET SDK for `dnx`, and the
@@ -60,7 +83,7 @@ Play in **Preview** or the published player with **DIAG** on, and note:
 | R5 pointer lock | overlay `lock on / refused (drag mode)` | works, or drag turning is acceptable |
 | R6 animation and listeners | the view moves at all in player, Studio, Teams | works in player |
 
-Controls: click the view, WASD move, mouse or ←/→ turn, Shift run, click or Ctrl fire, E or Space use,
+Controls on a phone: see step 4 above. Keyboard: click the view, WASD move, mouse or ←/→ turn, Shift run, click or Ctrl fire, E or Space use,
 1–2 weapon, Esc pause.
 
 ## Local test (Linux or Windows, no Power Apps needed)
@@ -70,6 +93,7 @@ cd pcf
 npm ci && npm run build
 node harness/build-harness.mjs      # bundles the harness, writes the level JSON
 node harness/run-harness.mjs        # headless Chromium: walks, opens a door, fires, saves screenshots to harness/dist
+node harness/run-touch.mjs          # Pixel 7 landscape emulation: stick, swipe turn, FIRE
 ```
 
 The harness tests the view and the contract. It doesn't run Power Fx.

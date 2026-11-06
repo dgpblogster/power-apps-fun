@@ -445,7 +445,12 @@ deep-station/
 
 | Milestone | Status | Notes |
 |---|---|---|
-| M0 Spike | Code written, Studio push pending | `RaycastView` builds with `pcf-scripts`. Generator emits the app with 12 configurable slots. In the local harness (headless Chromium, software rendering, a JavaScript stand-in for the tick) the view draws at 47–59 fps with textures, light, doors and depth-clipped sprites; input → tick → view round trip 16–41 ms median. Power Fx not yet compiled in Studio |
+| M0 Spike | Code written; importable solution built in the cloud; Studio validation pending | `RaycastView` builds with `pcf-scripts`. Generator emits the app with 12 configurable slots. In the local harness (headless Chromium, software rendering, a JavaScript stand-in for the tick) the view draws at 47–59 fps with textures, light, doors and depth-clipped sprites; input → tick → view round trip 16–41 ms median. Power Fx not yet compiled in Studio |
+
+Touch controls (M5) moved into M0 because the first test device is an Android phone: left-thumb stick (far
+push runs), drag on the right to turn, FIRE and USE buttons; the overlay appears on the first touch or when
+`ShowTouch` is true. `./build.sh` builds `release/DeepStation_unmanaged.zip` offline (code component + app) so
+the app can be installed from a browser with no local tools.
 
 M0 already goes beyond the flat-shaded plan: procedural textures, sprites, sound, doors that slide open,
 pickups, hitscan, and enemies that wake, chase, and shoot are all in, because each one exercises the contract
@@ -456,4 +461,4 @@ the spike has to freeze.
 Answered 2026-11-06: working title **Deep Station** kept; **12 enemy slots, configurable** (section 5); the
 code component feature is on in Workbench and the DeepStation solution and app exist with coauthoring on.
 
-1. Touch in v1 or later (currently M5)?
+1. Touch is in from M0 (see section 19); M5 now covers tablet layout polish only.

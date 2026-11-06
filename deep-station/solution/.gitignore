@@ -1,0 +1,4 @@
+bin/
+obj/
+src/CanvasApps/*_DocumentUri.msapp
+src/Controls/
