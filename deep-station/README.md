@@ -40,6 +40,16 @@ component and the app. Everything below works from a browser; only step 3 really
 4. Play it in the **Power Apps** Android app (landscape). Touch controls appear on the first touch: left thumb
    moves (push far to run), drag on the right side turns, **FIRE** and **USE** buttons bottom right.
 
+### Bootstrap (when Studio says "Unknown Code Component")
+
+A YAML-packed app can't introduce a new code component; Studio has to record it once. So:
+
+1. Import `release/DeepStation_bootstrap.zip` the same way. Its Deep Station M0 has no 3D view and opens in Studio.
+2. In Studio: **Insert > Get more components > Code** tab, pick **RaycastView**, **Import**. Then
+   **Insert > Code components > RaycastView** and drop one on the screen. **Save**.
+3. **Solutions > DeepStation > Export solution > Unmanaged**, and send the zip to the Claude session.
+4. The build copies Studio's record of the component into `canvas/base` and produces the full zip.
+
 ## Build in the cloud or on Linux
 
 ```bash

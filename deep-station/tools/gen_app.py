@@ -145,6 +145,21 @@ screen_yaml += "    Children:\n" + children
 
 editor_yaml = "EditorState:\n  ScreensOrder:\n    - Screen1\n"
 
+if os.environ.get("DEEPSTATION_BOOTSTRAP") == "1":
+    # Bootstrap app: no code component, so Studio can open it. The maker adds RaycastView once in Studio
+    # (Insert > Get more components > Code), saves, and exports; the export teaches the build how Studio
+    # records the component. See README "Bootstrap".
+    app_yaml = "App:\n  Properties:\n    BackEnabled: =false\n    StartScreen: =Screen1\n"
+    steps = ("Deep Station bootstrap\n\n"
+             "1. Insert > Get more components > Code tab > RaycastView > Import.\n"
+             "2. Insert > Code components > RaycastView (drop one anywhere).\n"
+             "3. Save. Then export the DeepStation solution (unmanaged) and send the zip to the Claude session.")
+    screen_yaml = ("Screens:\n  Screen1:\n    Properties:\n      Fill: =RGBA(12, 13, 15, 1)\n    Children:\n" +
+        control("lblBootstrap", "Label@2.5.1", 6, props(P,
+            Color=f"={AMBER}", Font=f"={MONO}", Size="=16", X="=60", Y="=60", Width="=1246", Height="=400",
+            VerticalAlign="=VerticalAlign.Top") + block("Text", '"' + steps.replace('"', '""') + '"', P)))
+    print("bootstrap app (no code component)")
+
 os.makedirs(OUT, exist_ok=True)
 for fname, content in (("App.pa.yaml", app_yaml), ("Screen1.pa.yaml", screen_yaml), ("_EditorState.pa.yaml", editor_yaml)):
     with open(os.path.join(OUT, fname), "w", encoding="utf-8", newline="\n") as f:
