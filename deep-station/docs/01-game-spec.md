@@ -445,12 +445,19 @@ deep-station/
 
 | Milestone | Status | Notes |
 |---|---|---|
-| M0 Spike | Code written; importable solution built in the cloud; Studio validation pending | `RaycastView` builds with `pcf-scripts`. Generator emits the app with 12 configurable slots. In the local harness (headless Chromium, software rendering, a JavaScript stand-in for the tick) the view draws at 47–59 fps with textures, light, doors and depth-clipped sprites; input → tick → view round trip 16–41 ms median. Power Fx not yet compiled in Studio |
+| M0 Spike | **Runs in Power Apps** (2026-11-06): solution 1.0.0.3 imported into Workbench, validated in Studio, played in the Power Apps Android app. Spike numbers (R1–R6) not yet recorded | `RaycastView` builds with `pcf-scripts`. Generator emits the app with 12 configurable slots. In the local harness (headless Chromium, software rendering, a JavaScript stand-in for the tick) the view draws at 47–59 fps with textures, light, doors and depth-clipped sprites; input → tick → view round trip 16–41 ms median. Power Fx not yet compiled in Studio |
 
 Touch controls (M5) moved into M0 because the first test device is an Android phone: left-thumb stick (far
 push runs), drag on the right to turn, FIRE and USE buttons; the overlay appears on the first touch or when
 `ShowTouch` is true. `./build.sh` builds `release/DeepStation_unmanaged.zip` offline (code component + app) so
 the app can be installed from a browser with no local tools.
+
+What it took to get a YAML-packed app with a new code component past Studio (PA2401 "Unknown Code
+Component"): the msapp must already carry Studio's own record of the component. A bootstrap build without
+the component was imported, RaycastView was added in Studio and saved, and the exported msapp (minus `Src`)
+became `canvas/base`: `Controls/4.json` keeps one RaycastView instance whose template holds the dynamic
+control definition, and `Resources/Controls/` holds the embedded bundle, which `build.sh` refreshes on every
+build. A `PcfTemplates` entry alone was not enough. If the manifest's properties change, repeat the export.
 
 M0 already goes beyond the flat-shaded plan: procedural textures, sprites, sound, doors that slide open,
 pickups, hitscan, and enemies that wake, chase, and shoot are all in, because each one exercises the contract

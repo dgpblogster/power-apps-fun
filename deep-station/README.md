@@ -1,6 +1,6 @@
 # Deep Station
 
-**Status: M0 spike, code written; Power Fx not yet compiled in Studio.** An original first-person shooter in
+**Status: M0 spike, runs in Power Apps** (Workbench, solution 1.0.0.3, played on Android). An original first-person shooter in
 the early-1990s style, built as a canvas Power App. All game logic runs in Power Fx on one Timer. A single PCF
 code component, `RaycastView`, draws the 3D view, plays sound, and captures keyboard and mouse.
 
