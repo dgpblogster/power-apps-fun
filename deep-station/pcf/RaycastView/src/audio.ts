@@ -29,7 +29,8 @@ export class Sound {
 
     play(id: number) {
         const ac = this.ac;
-        if (!ac || this.muted || ac.state !== "running") return;
+        if (!ac || this.muted) return;
+        if (ac.state === "suspended") void ac.resume(); // mobile webviews suspend the context between gestures
         const t = ac.currentTime;
         switch (id) {
             case SND.shot: this.burst(t, 0.12, 1800, 0.5); this.tone(t, "square", 140, 60, 0.08, 0.25); break;

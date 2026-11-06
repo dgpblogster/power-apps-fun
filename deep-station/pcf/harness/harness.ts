@@ -17,6 +17,7 @@ const params: Record<string, { raw: unknown }> = {
 let outputs: Record<string, number | boolean> = {};
 const ctx = { parameters: params, mode: { allocatedWidth: W, allocatedHeight: H, trackContainerResize: () => undefined } };
 const view = new RaycastView();
+(window as unknown as { view: unknown }).view = view;
 let notifies = 0;
 view.init(ctx as never, () => { notifies++; outputs = view.getOutputs() as never; }, {} as never, host);
 view.updateView(ctx as never);

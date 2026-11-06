@@ -46,6 +46,14 @@ export class RaycastView implements ComponentFramework.StandardControl<IInputs, 
     private latencies: number[] = [];
     private lastEcho = 0;
     private walkPhase = 0;
+    // cosmetic feedback the view may show before the tick confirms it (it never changes game state)
+    private flashUntil = 0;
+    private kickUntil = 0;
+    private nextLocalShot = 0;
+    private hitUntil = 0;
+    private killUntil = 0;
+    private emptyUntil = 0;
+    private lastWFrame = 0;
     private lastPos = { x: 0, y: 0 };
 
     public init(context: ComponentFramework.Context<IInputs>, notifyOutputChanged: () => void, _state: ComponentFramework.Dictionary, container: HTMLDivElement): void {
@@ -155,7 +163,15 @@ export class RaycastView implements ComponentFramework.StandardControl<IInputs, 
                 if (this.latencies.length > 20) this.latencies.shift();
             }
         }
-        for (const e of f.events) this.sound.play(e);
+        for (const e of f.events) {
+            this.sound.play(e);
+            if (e === 2) this.hitUntil = now + 220;
+            if (e === 3) this.killUntil = now + 400;
+            if (e === 9) this.emptyUntil = now + 500;
+        }
+        // the tick confirmed a shot: show the flash if the local press didn't already
+        if (f.wframe === 1 && this.lastWFrame !== 1 && now > this.flashUntil + 150) { this.flashUntil = now + 100; this.kickUntil = now + 150; }
+        this.lastWFrame = f.wframe;
     }
 
     // ---- animation frame ----
@@ -221,10 +237,41 @@ export class RaycastView implements ComponentFramework.StandardControl<IInputs, 
         this.img.data.set(new Uint8ClampedArray(this.renderer.buf.buffer));
         this.og.putImageData(this.img, 0, 0);
 
-        drawWeapon(this.og, f.weapon, f.wframe, Math.sin(this.walkPhase) * 6, Math.abs(Math.cos(this.walkPhase)) * 5 + 4, VIEW_W, VIEW_H);
+        // local fire feedback: flash and recoil on the press itself, repeating at the pistol's 8-tick cadence
+        if (this.input.keys & 32) {
+            if (t >= this.nextLocalShot && !this.paused) {
+                this.flashUntil = t + 100;
+                this.kickUntil = t + 150;
+                this.nextLocalShot = t + (f.weapon === 1 ? 500 : 400);
+            }
+        } else if (this.nextLocalShot > t + 50) {
+            this.nextLocalShot = t + 50; // allow tapping faster than the hold cadence, but not faster than the tick
+        }
+        const kick = t < this.kickUntil ? Math.max(1, Math.ceil(((this.kickUntil - t) / 150) * 3)) : 0;
+        drawWeapon(this.og, f.weapon, Math.max(f.wframe, kick), t < this.flashUntil, Math.sin(this.walkPhase) * 6, Math.abs(Math.cos(this.walkPhase)) * 5 + 4, VIEW_W, VIEW_H);
         this.og.fillStyle = "rgba(255,255,255,0.7)";
         this.og.fillRect(VIEW_W / 2 - 3, VIEW_H / 2, 2, 1); this.og.fillRect(VIEW_W / 2 + 2, VIEW_H / 2, 2, 1);
         this.og.fillRect(VIEW_W / 2, VIEW_H / 2 - 3, 1, 2); this.og.fillRect(VIEW_W / 2, VIEW_H / 2 + 2, 1, 2);
+        if (t < this.flashUntil) { // light the scene a little with the muzzle flash
+            this.og.fillStyle = "rgba(255,220,140,0.10)";
+            this.og.fillRect(0, 0, VIEW_W, VIEW_H);
+        }
+        if (t < this.hitUntil || t < this.killUntil) { // hit marker around the crosshair
+            const kill = t < this.killUntil, r = kill ? 7 : 5;
+            this.og.strokeStyle = kill ? "rgba(255,60,40,0.95)" : "rgba(255,240,200,0.95)";
+            this.og.lineWidth = 1;
+            const cx = VIEW_W / 2 + 0.5, cy = VIEW_H / 2 + 0.5;
+            this.og.beginPath();
+            for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) { this.og.moveTo(cx + sx * 3, cy + sy * 3); this.og.lineTo(cx + sx * r, cy + sy * r); }
+            this.og.stroke();
+        }
+        if (t < this.emptyUntil) {
+            this.og.fillStyle = "rgba(255,200,80,0.9)";
+            this.og.font = "bold 10px monospace";
+            this.og.textAlign = "center";
+            this.og.fillText("NO RIVETS", VIEW_W / 2, VIEW_H / 2 + 22);
+            this.og.textAlign = "left";
+        }
         if (f.flash) {
             this.og.fillStyle = f.flash === 1 ? "rgba(255,0,0,0.30)" : f.flash === 2 ? "rgba(255,210,60,0.22)" : "rgba(40,255,90,0.22)";
             this.og.fillRect(0, 0, VIEW_W, VIEW_H);
@@ -288,7 +335,7 @@ export class RaycastView implements ComponentFramework.StandardControl<IInputs, 
             return Math.round(s[Math.min(s.length - 1, Math.floor(p * s.length))]);
         };
         const lines = [
-            `fps ${this.fps}`,
+            `fps ${this.fps}   keys ${this.input.keys}   weapon frame ${this.cur?.f.wframe ?? 0}`,
             `tick gap med ${q(this.intervals, 0.5)} ms  p95 ${q(this.intervals, 0.95)} ms`,
             `input->tick->view med ${q(this.latencies, 0.5)} ms  p95 ${q(this.latencies, 0.95)} ms`,
             `lock ${this.input.locked ? "on" : this.input.lockRefused ? "refused (drag mode)" : "off"}  tick ${this.cur?.f.tick ?? 0}`,

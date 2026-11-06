@@ -158,7 +158,8 @@ export function poseOf(art: SpriteArt, frame: number, state: number): number {
 }
 
 /** Player weapons drawn on a 2D canvas at view resolution (320 wide). Frame 0 idle, 1-3 firing. */
-export function drawWeapon(g: CanvasRenderingContext2D, weapon: number, wframe: number, bobX: number, bobY: number, w: number, h: number) {
+/** flash: draw the muzzle flash (the view shows it at once on a local press, then as the tick confirms). */
+export function drawWeapon(g: CanvasRenderingContext2D, weapon: number, wframe: number, flash: boolean, bobX: number, bobY: number, w: number, h: number) {
     const cx = w / 2 + bobX;
     const by = h + bobY;
     const fire = wframe > 0;
@@ -169,7 +170,7 @@ export function drawWeapon(g: CanvasRenderingContext2D, weapon: number, wframe: 
         g.fillStyle = "#8a8f98"; g.fillRect(cx + 10 + swing, by - 82, 32, 16);
         g.fillStyle = "#c08850"; g.fillRect(cx + 30, by - 30, 26, 30);
     } else { // rivet pistol (default for M0 and any later weapon without art)
-        if (fire && wframe === 1) {
+        if (flash) {
             g.fillStyle = "#ffe080"; g.beginPath(); g.arc(cx, by - 74, 12, 0, Math.PI * 2); g.fill();
             g.fillStyle = "#fff8d0"; g.beginPath(); g.arc(cx, by - 74, 6, 0, Math.PI * 2); g.fill();
         }
