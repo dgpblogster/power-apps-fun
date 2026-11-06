@@ -20,7 +20,11 @@ SRC_OUT="$DIST/Src"
 DEEPSTATION_SRC="$PWD/$SRC_OUT" DEEPSTATION_BOOTSTRAP="${BOOTSTRAP:-0}" DEEPSTATION_ENEMY_SLOTS="${ENEMY_SLOTS:-12}" python3 tools/gen_app.py "${LEVEL:-m0-test}"
 [ "${BOOTSTRAP:-0}" = 1 ] || cp "$SRC_OUT"/*.pa.yaml canvas/Src/
 
-# 3. msapp: base scaffolding + generated Src
+# 3. msapp: base scaffolding + generated Src.
+#    canvas/base comes from a Studio export (Controls/4.json keeps one RaycastView instance whose template is
+#    Studio's record of the component). Keep its embedded copy of the bundle in step with the build. If the
+#    manifest's properties change, re-export from Studio: the template there lists the properties.
+cp pcf/out/controls/RaycastView/bundle.js canvas/base/msapp/Resources/Controls/DeepStation.RaycastView.bundle.js
 mkdir -p "$DIST/pack"
 (cd canvas/base && zip -qr "../../$DIST/pack/DeepStation.msapr" .)
 cp -r "$SRC_OUT" "$DIST/pack/Src"
