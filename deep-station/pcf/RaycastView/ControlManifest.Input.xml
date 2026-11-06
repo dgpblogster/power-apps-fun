@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Deep Station RaycastView: the contract with Power Fx (docs/01-game-spec.md section 3).
+  Properties can't be removed after import, only added as optional. Freeze at the end of M0.
+-->
+<manifest>
+  <control namespace="DeepStation" constructor="RaycastView" version="0.1.0"
+           display-name-key="RaycastView" description-key="Deep Station 3D view: draws, plays sound, captures input"
+           control-type="standard">
+    <external-service-usage enabled="false"></external-service-usage>
+
+    <!-- Inputs: Power Fx -> view -->
+    <property name="MapData" display-name-key="MapData" description-key="W,H; then W*H cell characters, row by row"
+              of-type="Multiple" usage="input" required="false" />
+    <property name="LightData" display-name-key="LightData" description-key="W*H digits 0-9, light level per cell"
+              of-type="Multiple" usage="input" required="false" />
+    <property name="Frame" display-name-key="Frame" description-key="Packed frame record, rebuilt every tick"
+              of-type="Multiple" usage="input" required="false" />
+    <property name="Paused" display-name-key="Paused" description-key="Stops input and dims the view"
+              of-type="TwoOptions" usage="input" required="false" />
+    <property name="ShowTouch" display-name-key="ShowTouch" description-key="Draws on-screen stick and buttons"
+              of-type="TwoOptions" usage="input" required="false" />
+    <property name="ShowDiag" display-name-key="ShowDiag" description-key="Draws the spike diagnostics overlay"
+              of-type="TwoOptions" usage="input" required="false" />
+    <property name="Muted" display-name-key="Muted" description-key="Silences sound effects"
+              of-type="TwoOptions" usage="input" required="false" />
+    <property name="TickMs" display-name-key="TickMs" description-key="Tick length in ms, the interpolation window"
+              of-type="Whole.None" usage="input" required="false" />
+
+    <!-- Outputs: view -> Power Fx (read by the tick, throttled to 30 per second) -->
+    <property name="Keys" display-name-key="Keys" description-key="Held controls bitmask: 1 fwd, 2 back, 4 left, 8 right, 16 run, 32 fire, 64 turn left, 128 turn right"
+              of-type="Whole.None" usage="output" />
+    <property name="Yaw" display-name-key="Yaw" description-key="View angle in degrees, 0 = +X (east), 90 = +Y (south)"
+              of-type="Decimal" usage="output" />
+    <property name="UseSeq" display-name-key="UseSeq" description-key="Increments on each Use press"
+              of-type="Whole.None" usage="output" />
+    <property name="WeaponReq" display-name-key="WeaponReq" description-key="Last weapon slot pressed, 1-5"
+              of-type="Whole.None" usage="output" />
+    <property name="WeaponSeq" display-name-key="WeaponSeq" description-key="Increments on each weapon key press"
+              of-type="Whole.None" usage="output" />
+    <property name="MenuSeq" display-name-key="MenuSeq" description-key="Increments on Esc (pause) presses"
+              of-type="Whole.None" usage="output" />
+    <property name="MapSeq" display-name-key="MapSeq" description-key="Increments on Tab (automap) presses"
+              of-type="Whole.None" usage="output" />
+    <property name="Stamp" display-name-key="Stamp" description-key="ms timestamp of the last input change, echoed back in Frame for latency"
+              of-type="Whole.None" usage="output" />
+    <property name="Fps" display-name-key="Fps" description-key="Rendered frames per second"
+              of-type="Whole.None" usage="output" />
+    <property name="Ready" display-name-key="Ready" description-key="Assets built and first frame drawn"
+              of-type="TwoOptions" usage="output" />
+
+    <resources>
+      <code path="index.ts" order="1" />
+    </resources>
+  </control>
+</manifest>

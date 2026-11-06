@@ -1,0 +1,9 @@
+{
+  "extends": "./node_modules/pcf-scripts/tsconfig_base.json",
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "typeRoots": ["node_modules/@types"],
+    "strict": true,
+    "noUnusedLocals": true
+  }
+}

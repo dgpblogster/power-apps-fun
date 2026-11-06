@@ -1,0 +1,46 @@
+App:
+  Properties:
+    BackEnabled: =false
+    StartScreen: =Screen1
+    Formulas: |-
+      =// ---- level: Spike Test Deck ----
+      nfMapW = 28;
+      nfMapH = 16;
+      nfMap = "11111111111111111111111111111......1...........5.......11......D...~~~.....5.......11......1...........5.......11......1...........D.......11111D111...........5.......11......1...........5555D55511......1111111D111.........11......8.........1.........11......8.........1...44....11......8.........1...44....11......D.........1.........11......8.........1111D1111111......8...................11......8...666.............X1111111111111111111111111111";
+      nfMapData = "28,16;11111111111111111111111111111......1...........5.......11......D...~~~.....5.......11......1...........5.......11......1...........D.......11111D111...........5.......11......1...........5555D55511......1111111D111.........11......8.........1.........11......8.........1...44....11......8.........1...44....11......D.........1.........11......8.........1111D1111111......8...................11......8...666.............X1111111111111111111111111111";
+      nfLight = "6666666666666666666666666666677777769999999999999999999667777776999999999999999999966777777699999999999999999996677777769999999999999999999666666666999999999999999999966444444499999999999666666666644444446666666666655555555664444445555555555565555555566444444555555555556555555556644444455555555555655555555664444445555555555565555555566444444555555555556666666666644444455555555555555555555664444445555555555555555555566666666666666666666666666666";
+      nfDoorMap = "---------------------------------------------------------------A-------------------------------------------------------------------B------------C----------------------------------------------D------------------E--------------------------------------------------------------------------------------------------------F-----------------------------------------G------------------------------------------------------------------------------------------";
+      nfDoorIds = "ABCDEFGHIJKLMNOP";
+      nfStartX = 3.5;
+      nfStartY = 2.5;
+      nfStartYaw = 0;
+      nfItemCount = 2;
+      nfDecorSprites = "200,40,0,9.50,9.50,1;201,41,0,8.50,13.50,1;";
+      nfEnemyTotal = 12;
+      // ---- tuning (cells per tick at 20 ticks per second) ----
+      nfTickMs = 50;
+      nfWalk = 0.15;
+      nfRun = 0.25;
+      nfRadius = 0.25;
+      nfEnemyRadius = 0.3;
+      nfEnemySpeed = 0.06;
+      nfSightRange = 12;
+      nfMaxSlots = 12;
+      // ---- geometry helpers (pure functions; doors are passed in because named formulas can't read context variables) ----
+      CellIdx(x: Number, y: Number): Number = RoundDown(y, 0) * nfMapW + RoundDown(x, 0) + 1;
+      CellAt(x: Number, y: Number): Text = If(x < 0 || y < 0 || x >= nfMapW || y >= nfMapH, "1", Mid(nfMap, CellIdx(x, y), 1));
+      DoorOpen(i: Number, doors: Text): Number = Value(Mid(doors, Find(Mid(nfDoorMap, i, 1), nfDoorIds), 1));
+      Solid(x: Number, y: Number, doors: Text): Boolean =
+          With({c: CellAt(x, y)},
+              If(c = "." || c = "~" || c = "T", false,
+                 c = "D" || c = "a" || c = "c" || c = "v", DoorOpen(CellIdx(x, y), doors) < 7,
+                 true));
+      Blocked(x: Number, y: Number, r: Number, doors: Text): Boolean =
+          Solid(x - r, y - r, doors) || Solid(x + r, y - r, doors) || Solid(x - r, y + r, doors) || Solid(x + r, y + r, doors);
+      Clear(ax: Number, ay: Number, bx: Number, by: Number, doors: Text): Boolean =
+          With({n: Max(1, Min(24, RoundUp(Sqrt((bx - ax) ^ 2 + (by - ay) ^ 2) * 2, 0)))},
+              CountIf(Sequence(n) As s, Solid(ax + (bx - ax) * s.Value / (n + 1), ay + (by - ay) * s.Value / (n + 1), doors)) = 0);
+      AngDiff(a: Number, b: Number): Number = Mod(a - b + 540, 360) - 180;
+      Bit(k: Number, b: Number): Boolean = Mod(RoundDown(k / b, 0), 2) = 1;
+      B2N(b: Boolean): Number = If(b, 1, 0);
+      Num(v: Number): Text = Text(v, "0.00", "en-US");

@@ -35,16 +35,16 @@ state that it is not affiliated with id Software, ZeniMax, Bethesda, or Microsof
  ┌────────────────────────── Canvas app (Power Fx) ───────────────────────────┐
  │                                                                            │
  │  tmrGame (50 ms) ──► OnTimerEnd: one tick, sequential UpdateContext steps  │
- │       │                 reads  pcfView.Keys / .Yaw / .UseSeq / .WeaponReq   │
+ │       │                 reads  pcfView.Keys / .Yaw / .UseSeq / .WeaponSeq   │
  │       │                 writes ctx* game state                              │
  │       ▼                                                                    │
- │  nfFrame (named formula) = packed text of everything the view must show    │
+ │  pcfView.Frame (a formula) = packed text of everything the view must show  │
  │       │                                                                    │
  │       ▼                                                                    │
  │  ┌──────────────── pcfView (RaycastView code component) ────────────────┐  │
- │  │ inputs : MapData, LightData, Frame, Paused, ShowTouch, TickMs        │  │
+ │  │ inputs : MapData, LightData, Frame, Paused, TickMs, Show*, Muted     │  │
  │  │ renders: requestAnimationFrame, 320x200 offscreen canvas, scaled     │  │
- │  │ outputs: Keys, Yaw, UseSeq, WeaponReq, MenuSeq, Fps, Ready           │  │
+ │  │ outputs: Keys, Yaw, Use/Weapon/Menu/MapSeq, Stamp, Fps, Ready        │  │
  │  └──────────────────────────────────────────────────────────────────────┘  │
  │                                                                            │
  │  Status bar, messages, menus, automap, high scores: standard controls      │
@@ -75,38 +75,44 @@ is frozen at the end of M0. Every property after M0 is optional.
 
 | Property | Type | Set when | Content |
 |---|---|---|---|
-| `MapData` | Text | Level load | `W,H;` then W×H cell characters, row by row (section 6.1) |
-| `LightData` | Text | Level load | W×H digits `0`–`9`, light level per cell |
-| `Frame` | Text | Every tick | Packed frame record (3.3) |
-| `Paused` | Boolean | Menu, automap | Stops rendering and releases pointer lock |
-| `ShowTouch` | Boolean | Settings | Draws the on-screen stick and buttons |
+| `MapData` | Multiple lines of text | Level load | `W,H;` then W×H cell characters, row by row (section 6.1) |
+| `LightData` | Multiple lines of text | Level load | W×H digits `0`–`9`, light level per cell |
+| `Frame` | Multiple lines of text | Every tick | Packed frame record (3.3) |
+| `Paused` | Two options | Pause, menus | Disables game input, dims the view, releases pointer lock; Esc still counts |
 | `TickMs` | Whole number | Constant 50 | Interpolation window |
+| `ShowDiag` | Two options | Settings | Draws the spike diagnostics overlay (fps, tick gaps, round-trip latency, pointer lock) |
+| `Muted` | Two options | Settings | Silences sound effects |
+| `ShowTouch` | Two options | Settings | Draws the on-screen stick and buttons (M5; ignored until then) |
 
 ### 3.2 Outputs (PCF → Power Fx)
 
 | Property | Type | Meaning |
 |---|---|---|
 | `Keys` | Whole number | Bitmask of held controls: 1 forward, 2 back, 4 strafe left, 8 strafe right, 16 run, 32 fire, 64 turn left, 128 turn right |
-| `Yaw` | Decimal | Current view angle in degrees, 0–360, owned by the view (4.3) |
-| `UseSeq` | Whole number | Increments on each Use press (edge, never lost between ticks) |
-| `WeaponReq` | Whole number | Last weapon slot pressed, 1–5, 0 if none since the last `Frame.ack` |
-| `MenuSeq` | Whole number | Increments on Esc (pause) and Tab (automap) presses; low bit tells which |
-| `Fps` | Whole number | Rendered frames per second, for the diagnostics readout |
-| `Ready` | Boolean | Assets decoded and first frame drawn |
+| `Yaw` | Decimal | View angle in degrees, 0 = +X (east), 90 = +Y (south), owned by the view (4.3) |
+| `UseSeq` | Whole number | Increments on each Use press |
+| `WeaponReq`, `WeaponSeq` | Whole number | Last weapon slot pressed (1–5) and a counter that increments on each weapon press or wheel step |
+| `MenuSeq` | Whole number | Increments on each Esc press (pause) |
+| `MapSeq` | Whole number | Increments on each Tab press (automap) |
+| `Stamp` | Whole number | Millisecond timestamp of the last input change; Power Fx echoes it in `Frame` so the view can measure input → tick → view latency |
+| `Fps` | Whole number | Rendered frames per second |
+| `Ready` | Two options | Assets built and first frame drawn |
 
-Power Fx reads these as `pcfView.Keys` and so on **inside the tick**. `OnChange` is left empty. Microsoft's
-guidance warns that calling `notifyOutputChanged` on every keypress or mouse move floods the host with events,
-so the control calls it at most **30 times per second**, and only when an output changed. Edge inputs (Use,
-weapon, menu) are counters, not flags, so a press that falls between two ticks is never lost: the tick compares
-`pcfView.UseSeq` with `ctxUseSeqSeen`.
+The tick reads these as `pcfView.Keys` and so on. Microsoft's guidance warns that calling
+`notifyOutputChanged` on every keypress or mouse move floods the host with events, so the control calls it at
+most **30 times per second**, and only when an output changed. Presses (Use, weapon, menu, map) are counters,
+not flags, so a press that falls between two ticks is never lost: the tick compares `pcfView.UseSeq` with
+`ctxUseSeen`. The one exception to "read in the tick" is `MenuSeq`: the Timer stops while paused, so the
+control's `OnChange` toggles `ctxPaused` when `MenuSeq` changes.
 
 ### 3.3 Frame record
 
-One text value, rebuilt every tick by the named formula `nfFrame`, fields separated by `|`:
+One text value, the formula on `pcfView.Frame` (screen scope, because named formulas can't read context
+variables), recalculated whenever the tick changes state. Fields separated by `|`:
 
 ```
-tick|px|py|weapon|wframe|flash|doors|sprites|events|ack
- 41 |12.40|7.85|2|1|0|0000900000000000|1,4,10.5,6.5,2;3,7,15.0,9.2,0;9,1,11.0,7.0,0|6:41;11:41|7
+tick|px|py|weapon|wframe|flash|doors|sprites|events|echo|spawn
+41|12.40|7.85|2|1|0|0000900000000000|1,1,0,10.50,6.50,2;101,21,0,5.50,2.50,1|1;7|48211734|1:0.00
 ```
 
 | Field | Meaning |
@@ -115,13 +121,14 @@ tick|px|py|weapon|wframe|flash|doors|sprites|events|ack
 | `px`, `py` | Player position in cells, two decimals |
 | `weapon`, `wframe` | Weapon slot and animation frame (0 idle, 1–3 firing) |
 | `flash` | Screen tint for this tick: 0 none, 1 damage red, 2 pickup gold, 3 radiation green |
-| `doors` | One digit per door id 0–15: `0` closed … `9` fully open |
-| `sprites` | `;`-separated `kind,frame,x,y,state` for every visible thing: enemies, projectiles, pickups, decorations, corpses |
-| `events` | `;`-separated `soundId:tick` pairs raised this tick; the view plays each pair once |
-| `ack` | Echo of the last `WeaponReq`/`UseSeq` handled, so the view can clear its edge outputs |
+| `doors` | One digit per door id 0–15: `0` closed … `9` fully open. Door ids are assigned in reading order of door cells, by both sides |
+| `sprites` | `;`-separated `id,kind,frame,x,y,state`. `id` is stable (enemy slot 1–24, pickups 101+, decorations 200+) so the view can interpolate; `state` 4 draws the corpse |
+| `events` | `;`-separated sound ids raised this tick; the view plays them once per new tick |
+| `echo` | The `Stamp` output the tick last read |
+| `spawn` | `seq:yaw`. When `seq` changes, the view snaps its camera to `yaw` and skips interpolation (level start, restart) |
 
 The record is text on purpose: one input property, one `updateView` per tick, and the whole visible world is
-readable in a Studio label while debugging. Expected size: under 1 KB.
+readable in a Studio label while debugging. Size with 12 enemies: about 600 characters.
 
 ## 4. Game loop and timing
 
@@ -165,9 +172,12 @@ Context variables on `scrGame` (`ctx` prefix); named formulas (`nf` prefix) for 
 `ctxAmmoCharge`, `ctxKeys` (3-char bit string: amber, cyan, violet), `ctxCooldown`, `ctxWFrame`,
 `ctxFlash`, `ctxHurtTicks`.
 
-**Enemy pool:** 12 slots per level (choice; spike may lower to 8). Each slot `n` is six scalars generated by
-the Python tool: `ctxE{n}K` kind, `ctxE{n}X`, `ctxE{n}Y`, `ctxE{n}S` state, `ctxE{n}H` health,
-`ctxE{n}T` state timer. Slots are filled at level load and never added during play. A level with more than
+**Enemy pool:** 12 slots per level, configurable in two places. At build time, `.\build.ps1 -EnemySlots N`
+(1–24, default 12) decides how many slots the generator emits. At run time, `ctxSlots` (the SLOTS button,
+4 → 8 → 12) caps how many of them are active, so the spike can compare tick rates without regenerating. Each
+slot `n` is eight scalars: `ctxE{n}K` kind, `ctxE{n}X`, `ctxE{n}Y`, `ctxE{n}S` state (0 empty, 1 idle,
+2 chase, 3 pain, 4 dead), `ctxE{n}H` health, `ctxE{n}T` state timer, `ctxE{n}V` last line-of-sight result,
+`ctxE{n}F` animation frame. Slots are filled at level load and never added during play. A level with more than
 12 enemies in total uses **waves**: slots whose enemy has died and fully decayed may refill from the level's
 reserve list when the player enters a trigger cell (section 6.2).
 
@@ -422,7 +432,7 @@ deep-station/
   pcf/RaycastView/          ControlManifest.Input.xml, index.ts, render/, input/, audio/
   levels/                   one text file per level (6.2)
   tools/gen_app.py          emits the YAML: screens, status bar, timer, pcfView binding
-  tools/game_logic.py       the Power Fx tick, nfFrame, constants
+  tools/game_logic.py       the Power Fx tick, the Frame formula, constants, helper functions
   tools/levels.py           level text -> named formulas (map, lights, things)
   tools/textures.py         original 64x64 textures -> PNG atlas -> base64 module
   tools/sprites.py          original sprites -> PNG atlas -> base64 module
@@ -431,10 +441,19 @@ deep-station/
   docs/02-platform-decision.md
 ```
 
-## 19. Open questions
+## 19. Implementation status (2026-11-06)
 
-1. Keep the working title "Deep Station", or pick another?
-2. 12 enemy slots plus waves, or accept 8 and design smaller fights?
-3. Is the Workbench DLP policy and admin setting for code components in canvas apps something we can turn on,
-   or does this need a separate environment?
-4. Touch in v1 or later (currently M5)?
+| Milestone | Status | Notes |
+|---|---|---|
+| M0 Spike | Code written, Studio push pending | `RaycastView` builds with `pcf-scripts`. Generator emits the app with 12 configurable slots. In the local harness (headless Chromium, software rendering, a JavaScript stand-in for the tick) the view draws at 47–59 fps with textures, light, doors and depth-clipped sprites; input → tick → view round trip 16–41 ms median. Power Fx not yet compiled in Studio |
+
+M0 already goes beyond the flat-shaded plan: procedural textures, sprites, sound, doors that slide open,
+pickups, hitscan, and enemies that wake, chase, and shoot are all in, because each one exercises the contract
+the spike has to freeze.
+
+## 20. Open questions
+
+Answered 2026-11-06: working title **Deep Station** kept; **12 enemy slots, configurable** (section 5); the
+code component feature is on in Workbench and the DeepStation solution and app exist with coauthoring on.
+
+1. Touch in v1 or later (currently M5)?
